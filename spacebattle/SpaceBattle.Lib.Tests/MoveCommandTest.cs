@@ -26,7 +26,9 @@ public class MoveCommandTest
 
         //post
         // movable.Position is correct
+        movable.Verify();
         movable.VerifySet(m => m.Position = new Vector(new int[] { 5, 8 }), Times.Once);
+        
         movable.VerifyAll(); // !!!
     }
 }
