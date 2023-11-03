@@ -2,7 +2,7 @@ name: TurnTest
 
 on:
   push:
-    branches: ["Lab_1_2"]
+    branches: ["lab1_2"]
   workflow_dispatch:
 
 jobs:
