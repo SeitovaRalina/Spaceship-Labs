@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpaceBattle.Lib", "SpaceBat
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpaceBattle.Lib.Tests", "SpaceBattle.Lib.Tests\SpaceBattle.Lib.Tests.csproj", "{DA3A7BD7-69F8-48BD-8518-5E963E7AAC2C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpaceBattle.Lib.BDDTests", "SpaceBattle.Lib.BDDTests\SpaceBattle.Lib.BDDTests.csproj", "{DB9CD53A-A436-4C5E-82C4-D7E796C1B2C9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +26,9 @@ Global
 		{DA3A7BD7-69F8-48BD-8518-5E963E7AAC2C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DA3A7BD7-69F8-48BD-8518-5E963E7AAC2C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DA3A7BD7-69F8-48BD-8518-5E963E7AAC2C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DB9CD53A-A436-4C5E-82C4-D7E796C1B2C9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DB9CD53A-A436-4C5E-82C4-D7E796C1B2C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DB9CD53A-A436-4C5E-82C4-D7E796C1B2C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DB9CD53A-A436-4C5E-82C4-D7E796C1B2C9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

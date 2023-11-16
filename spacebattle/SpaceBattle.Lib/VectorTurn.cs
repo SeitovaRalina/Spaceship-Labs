@@ -19,14 +19,7 @@ public class VectorTurn
     }
     public override bool Equals(object? obj)
     {
-        if (obj == null || obj is not VectorTurn)
-        {
-            return false;
-        }
-        else
-        {
-            return Angle == ((VectorTurn)obj).Angle;
-        }
+        return obj is VectorTurn turn && Angle == turn.Angle;
     }
     public override int GetHashCode()
     {

@@ -33,14 +33,7 @@ public class Vector
     }
     public override bool Equals(object? obj)
     {
-        if (obj == null || obj is not Vector)
-            {
-                return false;
-            }
-        else
-            {
-                return coordinates.SequenceEqual( ( (Vector)obj ).coordinates);
-            }
+        return obj is Vector vector && coordinates.SequenceEqual(vector.coordinates);
     }
     public override int GetHashCode() => coordinates.Length + coordinates.Sum().GetHashCode();
 }
