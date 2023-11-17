@@ -25,7 +25,7 @@ public class VectorTurnTest
     }
 
     [Fact]
-    public void VectorTurnEqualsNotVectorTurn()
+    public void VectorTurnEqualIsTheSameVectorTurn()
     {
         var angle1 = new VectorTurn(3,8);
         var angle2 = new VectorTurn(135);
