@@ -6,7 +6,7 @@ public class TurnCommandTest
     // имеет угловую скорость 90 градусов. 
     // В результате поворота корабль оказывается под углом 135 градусов к горизонту.
     [Fact]
-    public void TurnCommandCanDefineAngleAndDeltaAngle() //Игровой объект может перемещаться по прямой
+    public void TheGameObjectCanRotateAroundItsOwnAxis() //Игровой объект может перемещаться по прямой
     {
         var turnable = new Mock<ITurnable>();
 
@@ -24,7 +24,7 @@ public class TurnCommandTest
     }
     // попытка сдвинуть корабль, у которого невозможно прочитать значение угла наклона к горизонту, приводит к ошибке.
     [Fact]
-    public void TurnCommandCantDefineAngle()
+    public void TheAngleOfGameObjectCanNotBeDefined()
     {
         var turnable = new Mock<ITurnable>();
 
@@ -37,7 +37,7 @@ public class TurnCommandTest
     }
     // попытка сдвинуть корабль, у которого невозможно прочитать значение угловой скорости, приводит к ошибке.
     [Fact]
-    public void TurnCommandCantDefineDeltaAngle()
+    public void TheDeltaAngleOfGameObjectCanNotBeDefined()
     {
         var turnable = new Mock<ITurnable>();
 
@@ -51,7 +51,7 @@ public class TurnCommandTest
     // попытка сдвинуть корабль, у которого невозможно изменить угол наклона к горизонту, приводит к ошибке.
     [Fact]
     [Obsolete]
-    public void TurnCommandCantChangeAngle()
+    public void TheGameObjectCanNotRotateAroundItsOwnAxis()
     {
         var turnable = new Mock<ITurnable>();
 
