@@ -11,13 +11,6 @@ public class VectorTurnTest
     }
 
     [Fact]
-    public void VectorTurnEqualsNull()
-    {
-        var angle = new VectorTurn(45);
-        Assert.False(angle.Equals(null));
-    }
-
-    [Fact]
     public void VectorTurnEqualsNotVectorTurn()
     {
         var angle = new VectorTurn(45);

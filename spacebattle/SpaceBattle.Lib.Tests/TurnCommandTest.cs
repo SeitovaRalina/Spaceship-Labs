@@ -6,7 +6,7 @@ public class TurnCommandTest
     // имеет угловую скорость 90 градусов. 
     // В результате поворота корабль оказывается под углом 135 градусов к горизонту.
     [Fact]
-    public void TurnCommandPositive()
+    public void TurnCommandCanDefineAngleAndDeltaAngle() //Игровой объект может перемещаться по прямой
     {
         var turnable = new Mock<ITurnable>();
 
