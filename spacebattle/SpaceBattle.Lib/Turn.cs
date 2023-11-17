@@ -2,8 +2,8 @@
 
 public interface ITurnable
 {
-    VectorTurn Angle { get; set; }
-    VectorTurn DeltaAngle { get; }
+    VectorAngle Angle { get; set; }
+    VectorAngle DeltaAngle { get; }
 }
 
 public class TurnCommand : ICommand

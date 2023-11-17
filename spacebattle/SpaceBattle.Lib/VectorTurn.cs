@@ -1,6 +1,6 @@
 ﻿namespace SpaceBattle.Lib;
 
-public class VectorTurn
+public class VectorAngle
 {
     private int angle;
     private int parts;
@@ -9,7 +9,7 @@ public class VectorTurn
         get => angle;
         set => angle = value % parts;
     }
-    public VectorTurn(int angle, int parts = 360)
+    public VectorAngle(int angle, int parts = 360)
     {
         this.parts = parts;
         Angle = angle;
@@ -26,7 +26,7 @@ public class VectorTurn
         parts /= gcd;
     }
 
-    public static VectorTurn operator +(VectorTurn x, VectorTurn y)
+    public static VectorAngle operator +(VectorAngle x, VectorAngle y)
     {
         x.angle = x.angle * y.parts + y.angle * x.parts;
         x.parts *= y.parts;
@@ -35,7 +35,7 @@ public class VectorTurn
     }
     public override bool Equals(object? obj)
     {
-        return obj is VectorTurn turn && Angle == turn.Angle;
+        return obj is VectorAngle turn && Angle == turn.Angle;
     }
     public override int GetHashCode()
     {

@@ -10,15 +10,15 @@ public class TurnCommandTest
     {
         var turnable = new Mock<ITurnable>();
 
-        turnable.SetupGet(t => t.Angle).Returns(new VectorTurn(45)).Verifiable();
-        turnable.SetupGet(t => t.DeltaAngle).Returns(new VectorTurn(90)).Verifiable();
+        turnable.SetupGet(t => t.Angle).Returns(new VectorAngle(45)).Verifiable();
+        turnable.SetupGet(t => t.DeltaAngle).Returns(new VectorAngle(90)).Verifiable();
 
         ICommand turnCommand = new TurnCommand(turnable.Object);
 
         turnCommand.Execute();
 
         turnable.Verify();
-        turnable.VerifySet(t => t.Angle = new VectorTurn(135), Times.Once);
+        turnable.VerifySet(t => t.Angle = new VectorAngle(135), Times.Once);
 
         turnable.VerifyAll();
     }
@@ -29,7 +29,7 @@ public class TurnCommandTest
         var turnable = new Mock<ITurnable>();
 
         turnable.SetupGet(t => t.Angle).Throws(() => new Exception()).Verifiable();
-        turnable.SetupGet(t => t.DeltaAngle).Returns(new VectorTurn(100)).Verifiable();
+        turnable.SetupGet(t => t.DeltaAngle).Returns(new VectorAngle(100)).Verifiable();
 
         ICommand turnCommand = new TurnCommand(turnable.Object);
 
@@ -41,7 +41,7 @@ public class TurnCommandTest
     {
         var turnable = new Mock<ITurnable>();
 
-        turnable.SetupGet(t => t.Angle).Returns(new VectorTurn(45)).Verifiable();
+        turnable.SetupGet(t => t.Angle).Returns(new VectorAngle(45)).Verifiable();
         turnable.SetupGet(t => t.DeltaAngle).Throws(() => new Exception()).Verifiable();
 
         ICommand turnCommand = new TurnCommand(turnable.Object);
@@ -55,8 +55,8 @@ public class TurnCommandTest
     {
         var turnable = new Mock<ITurnable>();
 
-        turnable.SetupGet(t => t.Angle).Returns(new VectorTurn(120)).Verifiable();
-        turnable.SetupGet(t => t.DeltaAngle).Returns(new VectorTurn(90)).Verifiable();
+        turnable.SetupGet(t => t.Angle).Returns(new VectorAngle(120)).Verifiable();
+        turnable.SetupGet(t => t.DeltaAngle).Returns(new VectorAngle(90)).Verifiable();
         turnable.SetupSet(t => t.Angle).Throws(() => new Exception()).Verifiable();
 
         ICommand turnCommand = new TurnCommand(turnable.Object);
