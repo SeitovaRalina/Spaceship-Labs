@@ -1,4 +1,4 @@
-namespace SpaceBattle.Lib;
+/* namespace SpaceBattle.Lib;
 
 public class Vector
 {
@@ -36,4 +36,4 @@ public class Vector
         return obj is Vector vector && coordinates.SequenceEqual(vector.coordinates);
     }
     public override int GetHashCode() => coordinates.Length + coordinates.Sum().GetHashCode();
-}
+} */

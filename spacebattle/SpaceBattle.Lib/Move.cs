@@ -1,4 +1,4 @@
-﻿namespace SpaceBattle.Lib;
+﻿/* namespace SpaceBattle.Lib;
 
 public interface IMovable
 {
@@ -18,4 +18,4 @@ public class MoveCommand : ICommand
     {
         movable.Position = movable.Position + movable.Velocity;
     }
-}
+} */
