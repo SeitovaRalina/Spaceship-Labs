@@ -28,4 +28,4 @@ jobs:
         run: dotnet test spacebattle/SpaceBattle.Lib.Tests /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:CoverletOutput=TestResults/coverage.opencover.xml
 
       - name: Format
-        run : dotnet format --verify-no-changes\
+        run : cd spacebattle && dotnet format --verify-no-changes\

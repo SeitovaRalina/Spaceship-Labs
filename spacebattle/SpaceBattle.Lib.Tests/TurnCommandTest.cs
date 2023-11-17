@@ -1,4 +1,4 @@
-namespace SpaceBattle.Lib.Tests;
+﻿namespace SpaceBattle.Lib.Tests;
 
 public class TurnCommandTest
 {
@@ -45,9 +45,9 @@ public class TurnCommandTest
         turnable.SetupGet(t => t.DeltaAngle).Throws(() => new Exception()).Verifiable();
 
         ICommand turnCommand = new TurnCommand(turnable.Object);
-        
+
         Assert.Throws<Exception>(() => turnCommand.Execute());
-    } 
+    }
     // попытка сдвинуть корабль, у которого невозможно изменить угол наклона к горизонту, приводит к ошибке.
     [Fact]
     [Obsolete]

@@ -1,4 +1,4 @@
-namespace SpaceBattle.Lib;
+﻿namespace SpaceBattle.Lib;
 
 public class VectorTurn
 {
@@ -9,7 +9,7 @@ public class VectorTurn
         get => angle;
         set => angle = value % parts;
     }
-    public VectorTurn(int angle, int parts=360)
+    public VectorTurn(int angle, int parts = 360)
     {
         this.parts = parts;
         Angle = angle;
@@ -25,10 +25,10 @@ public class VectorTurn
         angle /= gcd;
         parts /= gcd;
     }
-    
+
     public static VectorTurn operator +(VectorTurn x, VectorTurn y)
     {
-        x.angle = x.angle*y.parts + y.angle*x.parts;
+        x.angle = x.angle * y.parts + y.angle * x.parts;
         x.parts *= y.parts;
         x.Minimize();
         return x;

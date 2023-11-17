@@ -1,9 +1,9 @@
-namespace SpaceBattle.Lib;
+﻿namespace SpaceBattle.Lib;
 
 public interface ITurnable
 {
-    VectorTurn Angle {get ; set; }
-    VectorTurn DeltaAngle {get; }
+    VectorTurn Angle { get; set; }
+    VectorTurn DeltaAngle { get; }
 }
 
 public class TurnCommand : ICommand

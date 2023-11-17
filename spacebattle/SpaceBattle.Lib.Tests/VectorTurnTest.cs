@@ -1,4 +1,4 @@
-namespace SpaceBattle.Lib.Tests;
+﻿namespace SpaceBattle.Lib.Tests;
 
 public class VectorTurnTest
 {
@@ -27,8 +27,8 @@ public class VectorTurnTest
     [Fact]
     public void VectorTurnEqualIsTheSameVectorTurn()
     {
-        var angle1 = new VectorTurn(3,8);
+        var angle1 = new VectorTurn(3, 8);
         var angle2 = new VectorTurn(135);
-        Assert.False(angle1.Equals(angle2));
+        Assert.True(angle1.Equals(angle2));
     }
 }
