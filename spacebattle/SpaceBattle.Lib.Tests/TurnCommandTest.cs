@@ -50,14 +50,13 @@ public class TurnCommandTest
     }
     // попытка сдвинуть корабль, у которого невозможно изменить угол наклона к горизонту, приводит к ошибке.
     [Fact]
-    [Obsolete]
     public void TheGameObjectCanNotRotateAroundItsOwnAxis()
     {
         var turnable = new Mock<ITurnable>();
 
         turnable.SetupGet(t => t.Angle).Returns(new VectorAngle(120)).Verifiable();
         turnable.SetupGet(t => t.DeltaAngle).Returns(new VectorAngle(90)).Verifiable();
-        turnable.SetupSet(t => t.Angle).Throws(() => new Exception()).Verifiable();
+        turnable.SetupSet(t => t.Angle = It.IsAny<VectorAngle>()).Throws(() => new Exception()).Verifiable();
 
         ICommand turnCommand = new TurnCommand(turnable.Object);
 
