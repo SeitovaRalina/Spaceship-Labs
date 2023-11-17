@@ -2,7 +2,8 @@ name: TurnTest
 
 on:
   push:
-    branches : ["lab1_2"]
+    branches :
+      - 'lab**'
   pull_request:
     types: [opened, reopened]
   workflow_dispatch:
