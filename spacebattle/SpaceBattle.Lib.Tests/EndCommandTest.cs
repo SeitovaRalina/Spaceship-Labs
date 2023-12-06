@@ -5,36 +5,102 @@ namespace SpaceBattle.Lib.Tests;
 
 public class EndCommandTest
 {
-    private static void InitialState()
+    public EndCommandTest()
     {
         new InitScopeBasedIoCImplementationCommand().Execute();
+        IoC.Resolve<Hwdtech.ICommand>(
+            "Scopes.Current.Set", 
+            IoC.Resolve<object>(
+                "Scopes.New", 
+                IoC.Resolve<object>("Scopes.Root")
+            )
+        ).Execute();
 
-        var CreateEndMoveCommand = (object[] args) =>
-        {
-            var command = (IMoveCommandEndable)args[0];
-            return new EndMoveCommand(command);
-        };
+        ICommand emptyCommand = new EmptyCommand();
 
-        var InjectCommand = (object[] args) =>
-        {
-            var wherefromInject = (IInjectableCommand)args[0];
-            var whatInject = (ICommand)args[1];
-            wherefrom.Inject(whatInject);
-            return wherefromInject;
-        };
-
-        var DeleteObjectProperties = (object[] args) =>
-        {
-            var obj = (IUObject)args[0];
-            var keys = (IEnumerate<string>)args[1];
-            foreach (var key in keys)
+        IoC.Resolve<Hwdtech.ICommand>(
+            "IoC.Register",
+            "Game.Command.CreateEndMove",
+            (object[] args) =>
             {
-                obj.DeleteProperty(key);
+                var command = (IMoveCommandEndable)args[0];
+                return new EndMoveCommand(command);
             }
+        ).Execute();  
 
-            return "ok";
-        }
+        IoC.Resolve<Hwdtech.ICommand>(
+            "IoC.Register",
+            "Game.Command.DeleteUObjectProperties",
+            (object[] args) => 
+            {
+                var obj = (IUObject)args[0];
+                var keys = (IEnumerable<string>)args[1];
+                keys.ToList().ForEach(p => obj.DeleteProperty(p));
+                return "ok";
+            }
+        ).Execute();
+
+        IoC.Resolve<Hwdtech.ICommand>(
+            "IoC.Register",
+            "Game.Command.CreateEmpty",
+            (object[] args) => 
+            {
+                return emptyCommand;
+            }
+        ).Execute(); 
+        
+        IoC.Resolve<Hwdtech.ICommand>(
+            "IoC.Register",
+            "Game.Command.Inject",
+            (object[] args) =>
+            {
+                var bridgeCommand = (IInjectableCommand)args[0];
+                var commandToInject = (ICommand)args[1];
+                bridgeCommand.Inject(commandToInject);
+                return bridgeCommand;
+            }
+        ).Execute(); 
     }
-    ICommand emptyCommand = new EmptyCommand();
-    I
+    
+    [Fact]
+    public void EndMoveCommandTest()
+    {
+        var endable = new Mock<IMoveCommandEndable>();
+        var bridge = new BridgeCommand(new Mock<ICommand>().Object);
+        var obj = new Mock<IUObject>();
+
+        var keys = new List<string> {"DeltaAngle"};
+        var properties = new Dictionary<string, object>();
+
+        obj.Setup(x => x.DeleteProperty(It.IsAny<string>()))
+            .Callback<string>(name => properties.Remove(name));
+        obj.Setup(x => x.SetProperty(It.IsAny<string>(), It.IsAny<object>()))
+            .Callback<string, object>((name, value) => properties.Add(name, value));
+        obj.Setup(x => x.GetProperty(It.IsAny<string>())).Returns((string s) => properties[s]);
+
+        obj.Object.SetProperty("DeltaAngle", 45);
+
+        endable.SetupGet(x => x.Move).Returns(bridge).Verifiable();
+        endable.SetupGet(x => x.Object).Returns(obj.Object);
+        endable.SetupGet(x => x.Properties).Returns(keys);
+
+        IoC.Resolve<ICommand>("Game.Command.CreateEndMove", endable.Object).Execute();
+
+        Assert.Throws<System.Collections.Generic.KeyNotFoundException>(() => obj.Object.GetProperty("DeltaAngle"));
+        Assert.True(bridge.GetCommand() == IoC.Resolve<ICommand>("Game.Command.CreateEmpty"));
+    }
+    
+    [Fact]
+    public void BridgeCommandTest()
+    {
+        var command = new Mock<ICommand>();
+        command.Setup(x => x.Execute()).Verifiable();
+
+        var bridge = new BridgeCommand(command.Object);
+        bridge.Inject(IoC.Resolve<ICommand>("Game.Command.CreateEmpty"));
+
+        bridge.Execute();
+
+        command.Verify(x => x.Execute(), Times.Never());
+    }
 }
