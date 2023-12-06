@@ -1,9 +1,11 @@
-namespace SpaceBattle.Lib;
+﻿namespace SpaceBattle.Lib;
+
 public interface IInjectableCommand
 {
     public void Inject(ICommand obj);
 }
-public class BridgeCommand: ICommand, IInjectableCommand
+
+public class BridgeCommand : ICommand, IInjectableCommand
 {
     private ICommand internalCommand;
     public BridgeCommand(ICommand command)
@@ -18,5 +20,8 @@ public class BridgeCommand: ICommand, IInjectableCommand
     {
         internalCommand.Execute();
     }
-    public ICommand GetCommand() => internalCommand; 
+    public ICommand GetCommand()
+    {
+        return internalCommand;
+    }
 }

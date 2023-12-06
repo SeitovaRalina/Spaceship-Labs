@@ -1,4 +1,4 @@
-using Hwdtech;
+﻿using Hwdtech;
 using Hwdtech.Ioc;
 
 namespace SpaceBattle.Lib.Tests;
@@ -9,9 +9,9 @@ public class EndCommandTest
     {
         new InitScopeBasedIoCImplementationCommand().Execute();
         IoC.Resolve<Hwdtech.ICommand>(
-            "Scopes.Current.Set", 
+            "Scopes.Current.Set",
             IoC.Resolve<object>(
-                "Scopes.New", 
+                "Scopes.New",
                 IoC.Resolve<object>("Scopes.Root")
             )
         ).Execute();
@@ -26,12 +26,12 @@ public class EndCommandTest
                 var command = (IMoveCommandEndable)args[0];
                 return new EndMoveCommand(command);
             }
-        ).Execute();  
+        ).Execute();
 
         IoC.Resolve<Hwdtech.ICommand>(
             "IoC.Register",
             "Game.Command.DeleteUObjectProperties",
-            (object[] args) => 
+            (object[] args) =>
             {
                 var obj = (IUObject)args[0];
                 var keys = (IEnumerable<string>)args[1];
@@ -43,12 +43,12 @@ public class EndCommandTest
         IoC.Resolve<Hwdtech.ICommand>(
             "IoC.Register",
             "Game.Command.CreateEmpty",
-            (object[] args) => 
+            (object[] args) =>
             {
                 return emptyCommand;
             }
-        ).Execute(); 
-        
+        ).Execute();
+
         IoC.Resolve<Hwdtech.ICommand>(
             "IoC.Register",
             "Game.Command.Inject",
@@ -59,9 +59,9 @@ public class EndCommandTest
                 bridgeCommand.Inject(commandToInject);
                 return bridgeCommand;
             }
-        ).Execute(); 
+        ).Execute();
     }
-    
+
     [Fact]
     public void EndMoveCommandTest()
     {
@@ -69,14 +69,14 @@ public class EndCommandTest
         var bridge = new BridgeCommand(new Mock<ICommand>().Object);
         var obj = new Mock<IUObject>();
 
-        var keys = new List<string> {"DeltaAngle"};
+        var keys = new List<string> { "DeltaAngle" };
         var properties = new Dictionary<string, object>();
 
+        obj.Setup(x => x.GetProperty(It.IsAny<string>())).Returns((string s) => properties[s]);
+        obj.Setup(x => x.SetProperty(It.IsAny<string>(), It.IsAny<object>()))
+            .Callback<string, object>(properties.Add);
         obj.Setup(x => x.DeleteProperty(It.IsAny<string>()))
             .Callback<string>(name => properties.Remove(name));
-        obj.Setup(x => x.SetProperty(It.IsAny<string>(), It.IsAny<object>()))
-            .Callback<string, object>((name, value) => properties.Add(name, value));
-        obj.Setup(x => x.GetProperty(It.IsAny<string>())).Returns((string s) => properties[s]);
 
         obj.Object.SetProperty("DeltaAngle", 45);
 
@@ -86,10 +86,10 @@ public class EndCommandTest
 
         IoC.Resolve<ICommand>("Game.Command.CreateEndMove", endable.Object).Execute();
 
-        Assert.Throws<System.Collections.Generic.KeyNotFoundException>(() => obj.Object.GetProperty("DeltaAngle"));
+        Assert.Throws<KeyNotFoundException>(() => obj.Object.GetProperty("DeltaAngle"));
         Assert.True(bridge.GetCommand() == IoC.Resolve<ICommand>("Game.Command.CreateEmpty"));
     }
-    
+
     [Fact]
     public void BridgeCommandTest()
     {
