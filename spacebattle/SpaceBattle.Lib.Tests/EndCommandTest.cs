@@ -103,4 +103,30 @@ public class EndCommandTest
 
         command.Verify(x => x.Execute(), Times.Never());
     }
+
+    [Fact]
+    public void EmptyCommandTest()
+    {
+        var emptyCommand = IoC.Resolve<ICommand>("Game.Command.CreateEmpty");
+
+        emptyCommand.Execute();
+
+        Assert.NotNull(emptyCommand);
+    }
+
+    [Fact]
+    public void TryGetSomePropertyOfMoveCommandEndableThrowsException()
+    {
+        var obj = new Mock<IUObject>();
+        var bridge = new BridgeCommand(new Mock<ICommand>().Object);
+        var endable = new Mock<IMoveCommandEndable>();
+
+        endable.SetupGet(x => x.Move).Returns(bridge).Verifiable();
+        endable.SetupGet(x => x.Object).Returns(obj.Object);
+        endable.SetupGet(x => x.Properties).Throws(new Exception());
+
+        var endMoveCommand = IoC.Resolve<ICommand>("Game.Command.CreateEndMove", endable.Object);
+
+        Assert.Throws<Exception>(() => endMoveCommand.Execute());     
+    }
 }
