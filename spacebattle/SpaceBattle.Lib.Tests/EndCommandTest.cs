@@ -127,6 +127,6 @@ public class EndCommandTest
 
         var endMoveCommand = IoC.Resolve<ICommand>("Game.Command.CreateEndMove", endable.Object);
 
-        Assert.Throws<Exception>(() => endMoveCommand.Execute());     
+        Assert.Throws<Exception>(() => endMoveCommand.Execute());
     }
 }

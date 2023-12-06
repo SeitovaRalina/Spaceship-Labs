@@ -19,8 +19,8 @@ public class EndMoveCommand : ICommand
     public void Execute()
     {
         IoC.Resolve<string>("Game.Command.DeleteUObjectProperties", _endable.Object, _endable.Properties);
-        IoC.Resolve<IInjectableCommand>("Game.Command.Inject", 
-            _endable.Move, 
+        IoC.Resolve<IInjectableCommand>("Game.Command.Inject",
+            _endable.Move,
             IoC.Resolve<ICommand>("Game.Command.CreateEmpty"));
     }
 }
