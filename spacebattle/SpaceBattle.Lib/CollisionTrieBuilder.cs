@@ -1,22 +1,30 @@
-using Hwdtech;
+﻿using Hwdtech;
 
 namespace SpaceBattle.Lib;
 
-public interface ICollisionTrieBuilder
+public interface ITrieBuilder
 {
-    public void BuildTrieFromFile(string path);
+    public void BuildFromFile(string path);
 }
 
-public class CollisionTrieBuilder : ICollisionTrieBuilder
+public class TrieBuilder : ITrieBuilder
 {
-    private static IEnumerable<IEnumerable<int>> ReadFileData(string dataPath)
+    private static IEnumerable<IEnumerable<int>> ReadFileData(string path)
     {
-        return File.ReadAllLines(dataPath).Select(line => line.Split().Select(int.Parse));
+        return File.ReadAllLines(path).Select(line => line.Split().Select(int.Parse));
     }
-    
-    public void BuildTrieFromFile(string path)
+
+    public void BuildFromFile(string path)
     {
-        var trie = IoC.Resolve<CollisionTrie>("Game.CollisionTree");
-        ReadFileData(path).ToList().ForEach(trie.Insert);
+        ReadFileData(path).ToList().ForEach(vector =>
+        {
+            var prefixTrie = IoC.Resolve<IDictionary<int, object>>("Game.CollisionTree");
+
+            vector.ToList().ForEach(feature =>
+            {
+                prefixTrie.TryAdd(feature, new Dictionary<int, object>());
+                prefixTrie = (IDictionary<int, object>)prefixTrie[feature];
+            });
+        });
     }
 }
