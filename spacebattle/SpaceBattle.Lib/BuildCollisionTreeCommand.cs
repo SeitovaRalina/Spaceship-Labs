@@ -14,6 +14,6 @@ public class BuildCollisionTreeCommand : ICommand
     public void Execute()
     {
         // переход к построению префиксного дерева - Trie
-        IoC.Resolve<ITrieBuilder>("Game.CollisionTre.Builder").BuildFromFile(_path);
+        IoC.Resolve<ITrieBuilder>("Game.CollisionTree.Builder").BuildFromFile(_path);
     }
 }

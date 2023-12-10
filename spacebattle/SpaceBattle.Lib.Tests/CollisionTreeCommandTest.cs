@@ -4,9 +4,9 @@ using Hwdtech.Ioc;
 namespace SpaceBattle.Lib.Tests;
 using IDict = IDictionary<int, object>;
 
-public class TestCollisionTreeBuilder
+public class CollisionTreeCommandTest
 {
-    public TestCollisionTreeBuilder()
+    public CollisionTreeCommandTest()
     {
         new InitScopeBasedIoCImplementationCommand().Execute();
         IoC.Resolve<Hwdtech.ICommand>(
