@@ -16,14 +16,6 @@ public class MacroCommandTest
             )
         ).Execute();
 
-        var nameOperation = "MovementAndRotation";
-        IoC.Resolve<Hwdtech.ICommand>(
-            "IoC.Register",
-            "Component." + nameOperation,
-            (object[] args) =>
-                new string[] { "Game.Command.CreateMove", "Game.Command.CreateTurn" }
-        ).Execute();
-
         IoC.Resolve<Hwdtech.ICommand>(
             "IoC.Register",
             "Game.Command.CreateMacro",
@@ -47,8 +39,16 @@ public class MacroCommandTest
     }
 
     [Fact]
-    public void SuccessfulCreateAndRunMacroCommand()
+    public void SuccessfulExampleOfCreatingAndRunningMacroCommand()
     {
+        var nameOperation = "MovementAndRotationOperation";
+        IoC.Resolve<Hwdtech.ICommand>(
+            "IoC.Register",
+            "Component." + nameOperation,
+            (object[] args) =>
+                new string[] { "Game.Command.CreateMove", "Game.Command.CreateTurn" }
+        ).Execute();
+
         var obj = new Mock<IUObject>();
 
         var moveCommand = new Mock<ICommand>();
@@ -67,11 +67,26 @@ public class MacroCommandTest
             (object[] args) => turnCommand.Object
         ).Execute();
 
-        var macroCommand = IoC.Resolve<ICommand>("Game.Strategy.MacroCommand", "MovementAndRotation", obj.Object);
+        var macroCommand = IoC.Resolve<ICommand>("Game.Strategy.MacroCommand", nameOperation, obj.Object);
 
         macroCommand.Execute();
 
         moveCommand.Verify(x => x.Execute(), Times.Once);
         turnCommand.Verify(x => x.Execute(), Times.Once);
+    }
+
+    [Fact]
+    public void TryExecuteCommandsInMacroCommandThrowException()
+    {
+        var command1 = new Mock<ICommand>();
+        command1.Setup(x => x.Execute()).Throws(new Exception());
+
+        var command2 = new Mock<ICommand>();
+        command2.Setup(x => x.Execute()).Verifiable();
+
+        var commands = new List<ICommand> {command1.Object, command2.Object};
+
+        Assert.Throws<Exception>(() => new MacroCommand(commands).Execute());
+        command2.Verify(x => x.Execute(), Times.Never);
     }
 }
