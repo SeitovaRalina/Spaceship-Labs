@@ -1,8 +1,8 @@
-namespace SpaceBattle.Lib;
+﻿namespace SpaceBattle.Lib;
 
 public class MacroCommand : ICommand
 {
-    private IEnumerable<ICommand> _commands;
+    private readonly IEnumerable<ICommand> _commands;
 
     public MacroCommand(IEnumerable<ICommand> commands)
     {
@@ -10,6 +10,6 @@ public class MacroCommand : ICommand
     }
     public void Execute()
     {
-        _commands.ToList().ForEach(cmd=> cmd.Execute());
+        _commands.ToList().ForEach(command => command.Execute());
     }
 }
