@@ -84,7 +84,7 @@ public class MacroCommandTest
         var command2 = new Mock<ICommand>();
         command2.Setup(x => x.Execute()).Verifiable();
 
-        var commands = new List<ICommand> {command1.Object, command2.Object};
+        var commands = new List<ICommand> { command1.Object, command2.Object };
 
         Assert.Throws<Exception>(() => new MacroCommand(commands).Execute());
         command2.Verify(x => x.Execute(), Times.Never);
