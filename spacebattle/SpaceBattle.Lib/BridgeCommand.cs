@@ -20,8 +20,4 @@ public class BridgeCommand : ICommand, IInjectableCommand
     {
         internalCommand.Execute();
     }
-    public ICommand GetCommand()
-    {
-        return internalCommand;
-    }
 }

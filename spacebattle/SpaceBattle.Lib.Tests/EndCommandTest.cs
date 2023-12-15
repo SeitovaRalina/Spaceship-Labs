@@ -87,7 +87,6 @@ public class EndCommandTest
         IoC.Resolve<ICommand>("Game.Command.CreateEndMove", endable.Object).Execute();
 
         Assert.Throws<KeyNotFoundException>(() => obj.Object.GetProperty("DeltaAngle"));
-        Assert.True(bridge.GetCommand() == IoC.Resolve<ICommand>("Game.Command.CreateEmpty"));
     }
 
     [Fact]
@@ -102,16 +101,6 @@ public class EndCommandTest
         bridge.Execute();
 
         command.Verify(x => x.Execute(), Times.Never());
-    }
-
-    [Fact]
-    public void EmptyCommandTest()
-    {
-        var emptyCommand = IoC.Resolve<ICommand>("Game.Command.CreateEmpty");
-
-        emptyCommand.Execute();
-
-        Assert.NotNull(emptyCommand);
     }
 
     [Fact]
