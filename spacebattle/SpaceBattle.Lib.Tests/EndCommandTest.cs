@@ -92,15 +92,24 @@ public class EndCommandTest
     [Fact]
     public void BridgeCommandTest()
     {
-        var command = new Mock<ICommand>();
-        command.Setup(x => x.Execute()).Verifiable();
+        var command1 = new Mock<ICommand>();
+        command1.Setup(x => x.Execute()).Verifiable();
 
-        var bridge = new BridgeCommand(command.Object);
-        bridge.Inject(IoC.Resolve<ICommand>("Game.Command.CreateEmpty"));
+        var command2 = new Mock<ICommand>();
+        command2.Setup(x => x.Execute()).Verifiable();
+
+        var bridge = new BridgeCommand(command1.Object);
 
         bridge.Execute();
 
-        command.Verify(x => x.Execute(), Times.Never());
+        command1.Verify(x => x.Execute(), Times.Once);
+        command2.Verify(x => x.Execute(), Times.Never);
+
+        bridge.Inject(command2.Object);
+
+        bridge.Execute();
+        command1.Verify(x => x.Execute(), Times.Once);
+        command2.Verify(x => x.Execute(), Times.Once);
     }
 
     [Fact]
