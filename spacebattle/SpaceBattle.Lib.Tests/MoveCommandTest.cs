@@ -5,7 +5,6 @@ public class MoveCommandTest
     [Fact]
     public void GameObjectAbleMove()
     {
-        // pre
         var movable = new Mock<IMovable>();
 
         movable.SetupGet(m => m.Position).Returns(new int[] {12, 5}).Verifiable();
@@ -13,11 +12,8 @@ public class MoveCommandTest
 
         ICommand moveCommand = new MoveCommand(movable.Object);
 
-        // action
         moveCommand.Execute();
 
-        //post
-        // movable.Position is correct
         movable.VerifySet(m => m.Position = new int[] {5, 8}, Times.Once);
         movable.VerifyAll(); 
     }
