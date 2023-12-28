@@ -33,4 +33,16 @@ public class MoveCommandTest
 
         Assert.Throws<Exception>(() => moveCommand.Execute());
     }
+    [Fact]
+    public void AttemptMoveGameObjectInstantaneousVelocityValueCannotBeRead()
+    {
+        var movable = new Mock<IMovable>();
+
+        movable.SetupGet(m => m.Position).Returns(new int[] {12, 5}).Verifiable();
+        movable.SetupGet(m => m.Velocity).Throws(() => new Exception()).Verifiable();
+
+        ICommand moveCommand = new MoveCommand(movable.Object);
+
+        Assert.Throws<Exception>(() => moveCommand.Execute());
+    }
 }
