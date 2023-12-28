@@ -5,7 +5,7 @@ namespace SpaceBattle.Lib.Tests;
 
 public class StartCommandTests
 {
-    private static Mock<IQueue> queue;
+    readonly static Mock<IQueue> queue;
     static StartCommandTests()
     {
         new InitScopeBasedIoCImplementationCommand().Execute();
@@ -38,5 +38,19 @@ public class StartCommandTests
 
         startable.Verify(s => s.Properties, Times.Once());
         queue.Verify(q => q.Add(It.IsAny<ICommand>()), Times.Once());
+    }
+
+    [Fact]
+    public void NoPropertiesUObject()
+    {
+        var uobject = new Mock<IUObject>();
+
+        var startable = new Mock<IMoveCommandStartable>();
+        startable.Setup(s => s.Target).Throws(() => new Exception()).Verifiable();
+        startable.Setup(s => s.Properties).Throws(() => new Exception()).Verifiable();
+
+        var startMoveCommand = new StartMoveCommand(startable.Object);
+
+        Assert.Throws<Exception>(startMoveCommand.Execute);
     }
 }
