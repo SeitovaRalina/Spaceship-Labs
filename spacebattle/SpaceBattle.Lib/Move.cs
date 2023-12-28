@@ -1,22 +1,23 @@
-﻿namespace SpaceBattle.Lib;
+﻿﻿namespace SpaceBattle.Lib;
 
 public interface IMovable
 {
-    Vector Position { get; set; }
-    Vector Velocity { get; }
+    public int[] Position { get; set; }
+    public int[] Velocity { get; }
 }
 
 public class MoveCommand : ICommand
 {
-    private IMovable movable;
-    
+    private readonly IMovable movable;
     public MoveCommand(IMovable movable)
     {
         this.movable = movable;
     }
-
     public void Execute()
     {
-        movable.Position = movable.Position + movable.Velocity;
+        movable.Position = new int[]{
+            movable.Position[0] +  movable.Velocity[0],
+            movable.Position[1] +  movable.Velocity[1],
+        };
     }
 }
