@@ -66,7 +66,8 @@ public class EndCommandTest
     public void EndMoveCommandTest()
     {
         var endable = new Mock<IMoveCommandEndable>();
-        var bridge = new BridgeCommand(new Mock<ICommand>().Object);
+        var command = new Mock<ICommand>();
+        var bridge = new BridgeCommand(command.Object);
         var obj = new Mock<IUObject>();
 
         var keys = new List<string> { "DeltaAngle" };
@@ -83,10 +84,14 @@ public class EndCommandTest
         endable.SetupGet(x => x.Move).Returns(bridge).Verifiable();
         endable.SetupGet(x => x.Object).Returns(obj.Object);
         endable.SetupGet(x => x.Properties).Returns(keys);
+        command.Setup(x => x.Execute()).Verifiable();
+        
 
         IoC.Resolve<ICommand>("Game.Command.CreateEndMove", endable.Object).Execute();
 
         Assert.Throws<KeyNotFoundException>(() => obj.Object.GetProperty("DeltaAngle"));
+
+        command.Verify(m => m.Execute(), Times.Never());
     }
 
     [Fact]
