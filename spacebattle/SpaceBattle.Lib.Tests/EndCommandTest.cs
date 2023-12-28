@@ -85,7 +85,6 @@ public class EndCommandTest
         endable.SetupGet(x => x.Object).Returns(obj.Object);
         endable.SetupGet(x => x.Properties).Returns(keys);
         command.Setup(x => x.Execute()).Verifiable();
-        
 
         IoC.Resolve<ICommand>("Game.Command.CreateEndMove", endable.Object).Execute();
 
