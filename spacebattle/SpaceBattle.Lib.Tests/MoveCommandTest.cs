@@ -45,4 +45,17 @@ public class MoveCommandTest
 
         Assert.Throws<Exception>(() => moveCommand.Execute());
     }
+    [Fact]
+    public void AttemptMoveGameObjectPositionCannotChanged()
+    {
+        var movable = new Mock<IMovable>();
+
+        movable.SetupGet(m => m.Position).Returns(new int[] {12, 5}).Verifiable();
+        movable.SetupGet(m => m.Velocity).Returns(new int[] {-7, 3}).Verifiable();
+        movable.SetupSet(m => m.Position = It.IsAny<int[]>()).Throws(() => new Exception()).Verifiable();
+
+        ICommand moveCommand = new MoveCommand(movable.Object);
+
+        Assert.Throws<Exception>(() => moveCommand.Execute());
+    }
 }
