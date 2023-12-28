@@ -1,4 +1,4 @@
-﻿﻿namespace SpaceBattle.Lib;
+﻿namespace SpaceBattle.Lib;
 
 public interface IMovable
 {
