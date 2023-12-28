@@ -5,7 +5,10 @@ namespace SpaceBattle.Lib.Tests;
 
 public class StartCommandTests
 {
-    readonly static Mock<IQueue> queue;
+    #pragma warning disable IDE0036
+    private readonly static Mock<IQueue> queue;
+    #pragma warning disable IDE0036
+    
     static StartCommandTests()
     {
         new InitScopeBasedIoCImplementationCommand().Execute();
