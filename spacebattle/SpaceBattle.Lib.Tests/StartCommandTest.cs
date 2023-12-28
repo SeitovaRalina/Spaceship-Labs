@@ -5,7 +5,7 @@ namespace SpaceBattle.Lib.Tests;
 
 public class StartCommandTests
 {
-    private readonly static Mock<IQueue> queue;
+    private static Mock<IQueue> queue;
     static StartCommandTests()
     {
         new InitScopeBasedIoCImplementationCommand().Execute();
