@@ -27,7 +27,6 @@ jobs:
         run: dotnet build spacebattle/SpaceBattle.Lib --no-restore /p:ContinuousIntegrationBuild=true
 
       - name: Move Test
-        # run: dotnet test spacebattle/SpaceBattle.Lib.Tests /p:CollectCoverage=true /p:CoverletOutput=TestResults/ /p:CoverletOutputFormat=lcov
         run: dotnet test spacebattle/SpaceBattle.Lib.Tests /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:CoverletOutput=TestResults/coverage.opencover.xml
 
       - name: Format
