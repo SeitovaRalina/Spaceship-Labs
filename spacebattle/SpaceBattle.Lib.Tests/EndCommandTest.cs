@@ -17,7 +17,6 @@ public class EndCommandTest
             )
         ).Execute();
 
-        // emptyCommand = new EmptyCommand();
         emptyCommand = new Mock<ICommand>();
         emptyCommand.Setup(x => x.Execute()).Verifiable();
 
