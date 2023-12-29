@@ -13,16 +13,9 @@ public class MoveCommand : ICommand
     {
         this.movable = movable;
     }
+
     public void Execute()
     {
-        private readonly IMovable movable;
-        public MoveCommand(IMovable movable)
-        {
-            this.movable = movable;
-        }
-        public void Execute()
-        {
-            movable.Position += movable.Velocity;
-        }
+        movable.Position += movable.Velocity;
     }
 }
