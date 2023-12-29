@@ -54,10 +54,11 @@ public class MoveCommandTest
 
         Assert.Throws<Exception>(() => moveCommand.Execute());
     }
-    
+
     [Fact]
-    public void HashCode(){
-        Vector m = new Vector (1,1);
+    public void HashCode()
+    {
+        Vector m = new Vector(1, 1);
         int a = m.GetHashCode();
         Assert.True(true);
     }
