@@ -8,7 +8,7 @@ public interface IMovable
 
 public class MoveCommand : ICommand
 {
-    private readonly IMovable movable;
+    private IMovable movable;
     public MoveCommand(IMovable movable)
     {
         this.movable = movable;
