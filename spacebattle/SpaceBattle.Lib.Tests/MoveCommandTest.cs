@@ -23,7 +23,7 @@ public class MoveCommandTest
         var movable = new Mock<IMovable>();
 
         movable.SetupGet(m => m.Position).Throws(() => new Exception()).Verifiable();
-        movable.SetupGet(m => m.Velocity).Returns(new Vector(-7, 3)).Verifiable();
+        movable.SetupGet(m => m.Velocity).Returns(new Vector(-5, 3)).Verifiable();
 
         ICommand moveCommand = new MoveCommand(movable.Object);
 
