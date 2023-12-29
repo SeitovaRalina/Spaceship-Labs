@@ -19,9 +19,9 @@ public class RegisterHandlerCommand : ICommand
     }
     public void Execute()
     {
-        var hashcode = IoC.Resolve<object>("Component.GetHashCode", _types);
+        var hashcode = IoC.Resolve<object>("Component.GetHashCode", _types); // на выходе можно было указать тип int
         var tree = IoC.Resolve<IDictionary<object, IHandler>>("Game.ExceptionHandler.Tree");
 
-        tree.Add(hashcode, _handler);
+        tree.TryAdd(hashcode, _handler);
     }
 }

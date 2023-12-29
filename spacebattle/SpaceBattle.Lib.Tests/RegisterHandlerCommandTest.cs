@@ -25,6 +25,14 @@ public class RegisterHandlerCommandTest
             }
         ).Execute();
 
+        var strategyReturnDict = new Mock<IStrategy>();
+        strategyReturnDict.Setup(x => x.Init()).Returns(new Dictionary<object, IHandler>());
+        IoC.Resolve<Hwdtech.ICommand>(
+            "IoC.Register",
+            "Game.ExceptionHandler.Tree",
+            (object[] args) => strategyReturnDict.Object.Init(args)
+        ).Execute();
+
         IoC.Resolve<Hwdtech.ICommand>(
             "IoC.Register",
             "Game.ExceptionHandler.Register",
@@ -36,57 +44,32 @@ public class RegisterHandlerCommandTest
     public void SuccesfullRegisterExistedHandlerInExceptionHandlerTree()
     {
         var handler = new Mock<IHandler>();
-        var command = new Mock<ICommand>();
 
         var listOfTypes = new List<Type> { typeof(ICommand), typeof(Exception) };
-
-        var exceptionHandlerTree = new Mock<IDictionary<object, IHandler>>();
-        var realTree = new Dictionary<object, IHandler>();
-
-        exceptionHandlerTree.Setup(x => x.Add(It.IsAny<object>(), It.IsAny<IHandler>())).Callback(
-            (object key, IHandler handler) =>
-            {
-                realTree.TryAdd(key, handler);
-            });
-
-        IoC.Resolve<Hwdtech.ICommand>(
-            "IoC.Register",
-            "Game.ExceptionHandler.Tree",
-            (object[] args) => exceptionHandlerTree.Object
-        ).Execute();
+        var exceptionHandlerTree = IoC.Resolve<IDictionary<object, IHandler>>("Game.ExceptionHandler.Tree");
 
         IoC.Resolve<RegisterHandlerCommand>("Game.ExceptionHandler.Register", listOfTypes, handler.Object).Execute();
 
-        Assert.Single(realTree);
-        Assert.True(realTree.ContainsValue(handler.Object));
+        Assert.Single(exceptionHandlerTree);
+        var hashForTypes = IoC.Resolve<int>("Component.GetHashCode", listOfTypes);
+        Assert.Equal(exceptionHandlerTree[hashForTypes], handler.Object);
+
     }
 
     // Необходимо предусмотреть возможность, чтобы можно было задавать обработчики для команды, которая выбрасывает исключение, кроме указанных.
     [Fact]
     public void SuccesfullRegisterSomeHandlersCommand()
     {
-        var handler = new Mock<IHandler>();
-        var command = new Mock<ICommand>();
+        var handler1 = new Mock<IHandler>();
+        var handler2 = new Mock<IHandler>();
+        var handler3 = new Mock<IHandler>();
 
-        var exceptionHandlerTree = new Mock<IDictionary<object, IHandler>>();
-        var realTree = new Dictionary<object, IHandler>();
-        exceptionHandlerTree.Setup(x => x.Add(It.IsAny<object>(), It.IsAny<IHandler>())).Callback(
-        (object key, IHandler handler) =>
-        {
-            realTree.TryAdd(key, handler);
-        });
+        var exceptionHandlerTree = IoC.Resolve<IDictionary<object, IHandler>>("Game.ExceptionHandler.Tree");
 
-        IoC.Resolve<Hwdtech.ICommand>(
-            "IoC.Register",
-            "Game.ExceptionHandler.Tree",
-            (object[] args) => exceptionHandlerTree.Object
-        ).Execute();
+        IoC.Resolve<ICommand>("Game.ExceptionHandler.Register", new List<Type> { typeof(ICommand), typeof(Exception) }, handler1.Object).Execute();
+        IoC.Resolve<ICommand>("Game.ExceptionHandler.Register", new List<Type> { typeof(IQueue), typeof(Exception) }, handler2.Object).Execute();
+        IoC.Resolve<ICommand>("Game.ExceptionHandler.Register", new List<Type> { typeof(IQueue), typeof(KeyNotFoundException) }, handler3.Object).Execute();
 
-        IoC.Resolve<ICommand>("Game.ExceptionHandler.Register", new List<Type> { typeof(ICommand), typeof(Exception) }, handler.Object).Execute();
-        // IoC.Resolve<ICommand>("Game.ExceptionHandler.Register", new List<Type> { typeof(IQueue), typeof(Exception) }, handler.Object).Execute();
-        IoC.Resolve<ICommand>("Game.ExceptionHandler.Register", new List<Type> { typeof(IQueue), typeof(KeyNotFoundException) }, handler.Object).Execute();
-
-        exceptionHandlerTree.VerifyAll();
-        Assert.Equal(2, realTree.Count());
+        Assert.Equal(3, exceptionHandlerTree.Count());
     }
 }
