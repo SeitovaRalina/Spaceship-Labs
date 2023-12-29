@@ -5,6 +5,7 @@ namespace SpaceBattle.Lib.Tests;
 
 public class EndCommandTest
 {
+    public Mock<ICommand> emptyCommand;
     public EndCommandTest()
     {
         new InitScopeBasedIoCImplementationCommand().Execute();
@@ -16,7 +17,9 @@ public class EndCommandTest
             )
         ).Execute();
 
-        ICommand emptyCommand = new EmptyCommand();
+        // emptyCommand = new EmptyCommand();
+        emptyCommand = new Mock<ICommand>();
+        emptyCommand.Setup(x => x.Execute()).Verifiable();
 
         IoC.Resolve<Hwdtech.ICommand>(
             "IoC.Register",
@@ -45,7 +48,7 @@ public class EndCommandTest
             "Game.Command.CreateEmpty",
             (object[] args) =>
             {
-                return emptyCommand;
+                return emptyCommand.Object;
             }
         ).Execute();
 
@@ -86,11 +89,17 @@ public class EndCommandTest
         endable.SetupGet(x => x.Properties).Returns(keys);
         command.Setup(x => x.Execute()).Verifiable();
 
-        IoC.Resolve<ICommand>("Game.Command.CreateEndMove", endable.Object).Execute();
+        // bridge.Execute();
+        // command.Verify(x => x.Execute(), Times.Once);
+        // emptyCommand.Verify(x => x.Execute(), Times.Never);
 
+        Assert.NotNull(obj.Object.GetProperty("DeltaAngle"));
+        IoC.Resolve<ICommand>("Game.Command.CreateEndMove", endable.Object).Execute();
         Assert.Throws<KeyNotFoundException>(() => obj.Object.GetProperty("DeltaAngle"));
 
-        command.Verify(m => m.Execute(), Times.Never());
+        bridge.Execute();
+        command.Verify(x => x.Execute(), Times.Never);
+        emptyCommand.Verify(x => x.Execute(), Times.Once);
     }
 
     [Fact]
