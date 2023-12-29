@@ -89,16 +89,16 @@ public class EndCommandTest
         endable.SetupGet(x => x.Properties).Returns(keys);
         command.Setup(x => x.Execute()).Verifiable();
 
-        // bridge.Execute();
-        // command.Verify(x => x.Execute(), Times.Once);
-        // emptyCommand.Verify(x => x.Execute(), Times.Never);
+        bridge.Execute();
+        command.Verify(x => x.Execute(), Times.Once);
+        emptyCommand.Verify(x => x.Execute(), Times.Never);
 
         Assert.NotNull(obj.Object.GetProperty("DeltaAngle"));
         IoC.Resolve<ICommand>("Game.Command.CreateEndMove", endable.Object).Execute();
         Assert.Throws<KeyNotFoundException>(() => obj.Object.GetProperty("DeltaAngle"));
 
         bridge.Execute();
-        command.Verify(x => x.Execute(), Times.Never);
+        command.Verify(x => x.Execute(), Times.Once); // единожды, потому что 1 раз уже сработала и больше не выполнялась
         emptyCommand.Verify(x => x.Execute(), Times.Once);
     }
 
