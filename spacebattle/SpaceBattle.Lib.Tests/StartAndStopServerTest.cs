@@ -11,7 +11,7 @@ public class StartAndStopServerTest
 
     public StartAndStopServerTest()
     {
-        var _senderDictionary = new ConcurrentDictionary<int, ISender>();
+        var _senderDictionary = new ConcurrentDictionary<int, BlockingCollection<ICommand>>();
 
         _sendToThreadCommand = new Mock<ICommand>();
         _sendToThreadCommand.Setup(c => c.Execute()).Verifiable();
@@ -41,16 +41,12 @@ public class StartAndStopServerTest
             {
                 var id = (int)args[0];
 
-                return new ActionCommand(() =>
-                {
-                    var queue = new BlockingCollection<ICommand>();
-                    _senderDictionary[id] = new SenderAdapter(queue);
+                _senderDictionary[id] = new BlockingCollection<ICommand>();
 
-                    // аналогично происходит инициализация класса ServerThread 
-                    // и добавление его в словарь потоков ConcurrentDictionary<int, ServerThread>
+                // аналогично происходит инициализация класса ServerThread 
+                // и добавление его в словарь потоков ConcurrentDictionary<int, ServerThread>
 
-                    _startThreadCommand.Object.Execute();
-                });
+                return _startThreadCommand.Object;
             }
         ).Execute();
 
@@ -68,18 +64,17 @@ public class StartAndStopServerTest
                 var id = (int)args[0];
                 var message = (ICommand)args[1];
 
-                return new ActionCommand(() =>
-                {
-                    new SendCommand(id, message).Execute();
-                    _sendToThreadCommand.Object.Execute();
-                });
+                var queue = _senderDictionary[(int)args[0]];
+                queue.Add((ICommand)args[1]);
+
+                return _sendToThreadCommand.Object;
             }
         ).Execute();
 
         IoC.Resolve<Hwdtech.ICommand>(
             "IoC.Register",
             "Server.Thread.SoftStop",
-            (object[] args) => new Mock<ICommand>().Object
+            (object[] args) => new ActionCommand(() => {})
         ).Execute();
 
         IoC.Resolve<Hwdtech.ICommand>(
@@ -96,13 +91,36 @@ public class StartAndStopServerTest
 
         IoC.Resolve<ICommand>("Server.Start", sizeServer).Execute();
 
-        var currentSenderDictionary = IoC.Resolve<ConcurrentDictionary<int, ISender>>("Server.Thread.SenderDictionary");
+        var currentSenderDictionary = IoC.Resolve<ConcurrentDictionary<int, BlockingCollection<ICommand>>>("Server.Thread.SenderDictionary");
         
         Assert.True(currentSenderDictionary.Count() == sizeServer);
+        Assert.True(currentSenderDictionary.All(pair => pair.Value.Count == 0));
         _startThreadCommand.Verify(cmd => cmd.Execute(), Times.Exactly(sizeServer));
 
         IoC.Resolve<ICommand>("Server.Stop").Execute();
 
+        Assert.True(currentSenderDictionary.All(pair => pair.Value.Count == 1));
         _sendToThreadCommand.Verify(cmd => cmd.Execute(), Times.Exactly(sizeServer));
+    }
+
+    [Fact]
+    public void StartingandStoppingServerAsConsoleApplication()
+    {
+        var sizeServer = 666;
+
+        var consoleInput = new StringReader("any");
+        var consoleOutput = new StringWriter();
+        Console.SetIn(consoleInput);
+        Console.SetOut(consoleOutput);
+
+        var app = new RunApplicationCommand(sizeServer);
+
+        app.Execute();
+
+        var output = consoleOutput.ToString();
+
+        Assert.Contains($"The server is starting with the number of threads {sizeServer}", output);
+        Assert.Contains("Press any key to stop the server softly ...", output);
+        Assert.Contains("The server has successfully stopped its work. Press any key to exit...", output);
     }
 }

@@ -8,7 +8,7 @@ public class StopServerCommand : ICommand
     public void Execute()
     {
         // словарь очередей потоков
-        var threadQueues = IoC.Resolve<ConcurrentDictionary<int, ISender>>("Server.Thread.SenderDictionary");
+        var threadQueues = IoC.Resolve<ConcurrentDictionary<int, BlockingCollection<ICommand>>>("Server.Thread.SenderDictionary");
 
         threadQueues.ToList().ForEach(sender =>
             IoC.Resolve<ICommand>(
