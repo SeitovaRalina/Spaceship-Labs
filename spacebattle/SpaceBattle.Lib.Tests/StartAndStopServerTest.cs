@@ -1,4 +1,4 @@
-using System.Collections.Concurrent;
+﻿using System.Collections.Concurrent;
 using Hwdtech;
 using Hwdtech.Ioc;
 
@@ -16,7 +16,7 @@ public class StartAndStopServerTest
         _sendToThreadCommand = new Mock<ICommand>();
         _sendToThreadCommand.Setup(c => c.Execute()).Verifiable();
 
-        _startThreadCommand =  new Mock<ICommand>();
+        _startThreadCommand = new Mock<ICommand>();
         _startThreadCommand.Setup(c => c.Execute()).Verifiable();
 
         new InitScopeBasedIoCImplementationCommand().Execute();
@@ -51,7 +51,7 @@ public class StartAndStopServerTest
         ).Execute();
 
         IoC.Resolve<Hwdtech.ICommand>(
-            "IoC.Register", 
+            "IoC.Register",
             "Server.Start",
             (object[] args) => new StartServerCommand((int)args[0])
         ).Execute();
@@ -59,13 +59,13 @@ public class StartAndStopServerTest
         IoC.Resolve<Hwdtech.ICommand>(
             "IoC.Register",
             "Server.Thread.SendCommand",
-            (object[] args) => 
+            (object[] args) =>
             {
                 var id = (int)args[0];
                 var message = (ICommand)args[1];
 
-                var queue = _senderDictionary[(int)args[0]];
-                queue.Add((ICommand)args[1]);
+                var queue = _senderDictionary[id];
+                queue.Add(message);
 
                 return _sendToThreadCommand.Object;
             }
@@ -74,11 +74,11 @@ public class StartAndStopServerTest
         IoC.Resolve<Hwdtech.ICommand>(
             "IoC.Register",
             "Server.Thread.SoftStop",
-            (object[] args) => new ActionCommand(() => {})
+            (object[] args) => new Mock<ICommand>().Object
         ).Execute();
 
         IoC.Resolve<Hwdtech.ICommand>(
-            "IoC.Register", 
+            "IoC.Register",
             "Server.Stop",
             (object[] args) => new StopServerCommand()
         ).Execute();
@@ -88,11 +88,12 @@ public class StartAndStopServerTest
     public void SuccessfulStartingandStoppingServer()
     {
         var sizeServer = 3;
+        var currentSenderDictionary = IoC.Resolve<ConcurrentDictionary<int, BlockingCollection<ICommand>>>("Server.Thread.SenderDictionary");
+
+        Assert.True(currentSenderDictionary.Count() == 0);
 
         IoC.Resolve<ICommand>("Server.Start", sizeServer).Execute();
 
-        var currentSenderDictionary = IoC.Resolve<ConcurrentDictionary<int, BlockingCollection<ICommand>>>("Server.Thread.SenderDictionary");
-        
         Assert.True(currentSenderDictionary.Count() == sizeServer);
         Assert.True(currentSenderDictionary.All(pair => pair.Value.Count == 0));
         _startThreadCommand.Verify(cmd => cmd.Execute(), Times.Exactly(sizeServer));
