@@ -1,4 +1,4 @@
-namespace SpaceBattle.Lib;
+﻿namespace SpaceBattle.Lib;
 using Hwdtech;
 
 public class StartServerCommand : ICommand
@@ -10,7 +10,7 @@ public class StartServerCommand : ICommand
     }
     public void Execute()
     {
-        Enumerable.Range(0, _size).ToList().ForEach(id => 
+        Enumerable.Range(0, _size).ToList().ForEach(id =>
             // инициализирует по id поток и очередь для него, добавляясь в соответствующие словари
             IoC.Resolve<ICommand>("Server.Thread.Start", id).Execute()
         );

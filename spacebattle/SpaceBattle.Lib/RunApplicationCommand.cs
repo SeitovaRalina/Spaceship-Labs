@@ -1,4 +1,4 @@
-namespace SpaceBattle.Lib;
+﻿namespace SpaceBattle.Lib;
 using Hwdtech;
 
 public class RunApplicationCommand : ICommand
@@ -10,16 +10,15 @@ public class RunApplicationCommand : ICommand
     }
     public void Execute()
     {
-        Console.WriteLine("Здравствуйте, Иван Владимирович!");
-        Console.WriteLine("Нажмите на любую клавишу для запуска сервера ...");
-        Console.Read();
+        Console.WriteLine("Hello, Ivan Vladimirovich!");
+        Console.WriteLine($"The server is starting with the number of threads {_size}");
         IoC.Resolve<ICommand>("Server.Start", _size).Execute();
 
-        Console.WriteLine("Нажмите на любую клавишу для остановки сервера ...");
+        Console.WriteLine("Press any key to stop the server softly ...");
         Console.Read();
         IoC.Resolve<ICommand>("Server.Stop").Execute();
 
-        Console.WriteLine("Cервер успешно завершил свою работу. Нажмите любую кнопку для выхода... ");
+        Console.WriteLine("The server has successfully stopped its work. Press any key to exit...");
         Console.Read();
     }
 }
