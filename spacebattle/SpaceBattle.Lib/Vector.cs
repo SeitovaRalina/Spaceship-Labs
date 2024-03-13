@@ -3,7 +3,7 @@
 public class Vector
 {
     private int[] coordinates;
-    private int coord_cont;
+    private readonly int coord_cont;
     public Vector(params int[] coordinates)
     {
         this.coordinates = coordinates;
