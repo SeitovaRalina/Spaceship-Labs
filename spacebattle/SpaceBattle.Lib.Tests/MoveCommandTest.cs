@@ -1,4 +1,6 @@
-﻿namespace SpaceBattle.Lib.Tests;
+﻿using Moq;
+
+namespace SpaceBattle.Lib.Tests;
 
 public class MoveCommandTest
 {
@@ -59,8 +61,8 @@ public class MoveCommandTest
     [Fact]
     public void HashCode()
     {
-        Vector m = new Vector(1, 1);
-        int a = m.GetHashCode();
+        var m = new Vector(1, 1);
+        _ = m.GetHashCode();
         Assert.True(true);
     }
 }

@@ -8,9 +8,8 @@ public interface IMovable
 
 public class MoveCommand : ICommand
 {
-#pragma warning disable IDE0036
     private readonly IMovable movable;
-#pragma warning disable IDE0036
+
     public MoveCommand(IMovable movable)
     {
         this.movable = movable;
