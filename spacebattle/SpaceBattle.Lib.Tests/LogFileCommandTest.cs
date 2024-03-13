@@ -29,11 +29,11 @@ public class LogFileCommandTest
     [Fact]
     public void SuccessfulLogginginTemporaryFile()
     {
-        var pathToTemporaryFile = Path.GetTempFileName();
+        var tempFilePath = Path.GetTempFileName();
         IoC.Resolve<Hwdtech.ICommand>(
             "IoC.Register",
             "Game.ExceptionHandler.GetLogFileName",
-            (object[] args) => pathToTemporaryFile
+            (object[] args) => tempFilePath
         ).Execute();
         var types = new List<Type> { typeof(string), typeof(ArgumentException), typeof(ICommand) };
 
@@ -41,7 +41,8 @@ public class LogFileCommandTest
 
         logFileCommand.Execute();
 
-        var logFileLines = File.ReadAllLines(pathToTemporaryFile);
+        var logFileLines = File.ReadAllLines(tempFilePath);
+        File.Delete(tempFilePath);
 
         Assert.Equal(logFileLines[0], IoC.Resolve<string>("Component.GetLogMessage", types));
     }
