@@ -73,21 +73,21 @@ public class StartAndStopServerTest
         var _barrier = new Barrier(participantCount: 0);
         IoC.Resolve<Hwdtech.ICommand>(
             "IoC.Register",
-            "Server.Barrier",   
+            "Server.Barrier",
             (object[] args) => _barrier
-        ).Execute();    
+        ).Execute();
 
         IoC.Resolve<Hwdtech.ICommand>(
             "IoC.Register",
             "Server.Thread.SoftStop",
-            (object[] args) => 
+            (object[] args) =>
             {
                 // представим, что SoftStopCommand успешно отработала
                 // после завершения потока вызывается Action
 
                 var action = (Action)args[1];
                 action.Invoke();
-                
+
                 return new Mock<ICommand>().Object;
             }
         ).Execute();
