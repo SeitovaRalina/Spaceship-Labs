@@ -8,7 +8,6 @@ public class StartAndStopServerTest
 {
     private readonly Mock<ICommand> _sendToThreadCommand;
     private readonly Mock<ICommand> _startThreadCommand;
-
     public StartAndStopServerTest()
     {
         var _senderDictionary = new ConcurrentDictionary<int, BlockingCollection<ICommand>>();
@@ -71,10 +70,26 @@ public class StartAndStopServerTest
             }
         ).Execute();
 
+        var _barrier = new Barrier(participantCount: 0);
+        IoC.Resolve<Hwdtech.ICommand>(
+            "IoC.Register",
+            "Server.Barrier",   
+            (object[] args) => _barrier
+        ).Execute();    
+
         IoC.Resolve<Hwdtech.ICommand>(
             "IoC.Register",
             "Server.Thread.SoftStop",
-            (object[] args) => new Mock<ICommand>().Object
+            (object[] args) => 
+            {
+                // представим, что SoftStopCommand успешно отработала
+                // после завершения потока вызывается Action
+
+                var action = (Action)args[1];
+                action.Invoke();
+                
+                return new Mock<ICommand>().Object;
+            }
         ).Execute();
 
         IoC.Resolve<Hwdtech.ICommand>(
@@ -89,6 +104,7 @@ public class StartAndStopServerTest
     {
         var sizeServer = 3;
         var currentSenderDictionary = IoC.Resolve<ConcurrentDictionary<int, BlockingCollection<ICommand>>>("Server.Thread.SenderDictionary");
+        var currentBarrier = IoC.Resolve<Barrier>("Server.Barrier");
 
         Assert.True(currentSenderDictionary.Count() == 0);
 
@@ -96,18 +112,20 @@ public class StartAndStopServerTest
 
         Assert.True(currentSenderDictionary.Count() == sizeServer);
         Assert.True(currentSenderDictionary.All(pair => pair.Value.Count == 0));
+        Assert.Equal(currentBarrier.CurrentPhaseNumber, 0);
         _startThreadCommand.Verify(cmd => cmd.Execute(), Times.Exactly(sizeServer));
 
         IoC.Resolve<ICommand>("Server.Stop").Execute();
 
         Assert.True(currentSenderDictionary.All(pair => pair.Value.Count == 1));
+        Assert.Equal(currentBarrier.CurrentPhaseNumber, 1);
         _sendToThreadCommand.Verify(cmd => cmd.Execute(), Times.Exactly(sizeServer));
     }
 
     [Fact]
     public void StartingandStoppingServerAsConsoleApplication()
     {
-        var sizeServer = 666;
+        var sizeServer = 11;
 
         var consoleInput = new StringReader("any");
         var consoleOutput = new StringWriter();
