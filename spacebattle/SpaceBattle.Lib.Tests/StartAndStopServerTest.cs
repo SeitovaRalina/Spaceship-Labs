@@ -8,8 +8,6 @@ public class StartAndStopServerTest
 {
     private readonly Mock<ICommand> _sendToThreadCommand;
     private readonly Mock<ICommand> _startThreadCommand;
-    private readonly Barrier _barrier = new Barrier(participantCount: 0);
-    private readonly List<Task> _tasks = new List<Task>();
     public StartAndStopServerTest()
     {
         var _senderDictionary = new ConcurrentDictionary<int, BlockingCollection<ICommand>>();
@@ -32,11 +30,7 @@ public class StartAndStopServerTest
         IoC.Resolve<Hwdtech.ICommand>(
             "IoC.Register",
             "Server.Thread.SenderDictionary",
-            (object[] args) => 
-            {
-                Task.WaitAll(_tasks.ToArray());
-                return _senderDictionary;
-            }
+            (object[] args) => _senderDictionary
         ).Execute();
 
         IoC.Resolve<Hwdtech.ICommand>(
@@ -75,14 +69,7 @@ public class StartAndStopServerTest
                 return _sendToThreadCommand.Object;
             }
         ).Execute();
-/*
-        var _barrier = new Barrier(participantCount: 0);
-        IoC.Resolve<Hwdtech.ICommand>(
-            "IoC.Register",
-            "Server.Barrier",
-            (object[] args) => _barrier
-        ).Execute();
-*/
+
         IoC.Resolve<Hwdtech.ICommand>(
             "IoC.Register",
             "Server.Thread.SoftStop",
@@ -92,26 +79,10 @@ public class StartAndStopServerTest
                 // после завершения потока вызывается Action
 
                 var action = (Action)args[1];
-                _tasks.Add(Task.Run(() => { action.Invoke(); }));
+                action.Invoke();
 
                 return new Mock<ICommand>().Object;
             }
-        ).Execute();
-
-        IoC.Resolve<Hwdtech.ICommand>(
-            "IoC.Register",
-            "Server.Thread.SoftStop.Action",
-            (object[] args) => 
-            {
-                _barrier.AddParticipant();
-                return () => { _barrier.SignalAndWait(); };
-            }
-        ).Execute();
-
-        IoC.Resolve<Hwdtech.ICommand>(
-            "IoC.Register",
-            "Server.Stop",
-            (object[] args) => new StopServerCommand()
         ).Execute();
     }
 
@@ -120,6 +91,27 @@ public class StartAndStopServerTest
     {
         var sizeServer = 3;
         var currentSenderDictionary = IoC.Resolve<ConcurrentDictionary<int, BlockingCollection<ICommand>>>("Server.Thread.SenderDictionary");
+        var barrier = new Barrier(participantCount: sizeServer + 1);
+
+        IoC.Resolve<Hwdtech.ICommand>(
+            "IoC.Register",
+            "Server.Thread.SoftStop.Action",
+            (object[] args) =>
+            {
+                return () => { barrier.RemoveParticipant(); };
+            }
+        ).Execute();
+
+        IoC.Resolve<Hwdtech.ICommand>(
+            "IoC.Register",
+            "Server.Stop",
+            (object[] args) => new ActionCommand(() =>
+                {
+                    new StopServerCommand().Execute();
+                    // завершить основной поток
+                    barrier.SignalAndWait();
+                })
+        ).Execute();
 
         Assert.True(currentSenderDictionary.Count() == 0);
 
@@ -127,21 +119,32 @@ public class StartAndStopServerTest
 
         Assert.True(currentSenderDictionary.Count() == sizeServer);
         Assert.True(currentSenderDictionary.All(pair => pair.Value.Count == 0));
-        Assert.Equal(_barrier.CurrentPhaseNumber, 0);
+        Assert.Equal(barrier.CurrentPhaseNumber, 0);
         _startThreadCommand.Verify(cmd => cmd.Execute(), Times.Exactly(sizeServer));
 
         IoC.Resolve<ICommand>("Server.Stop").Execute();
 
         Assert.True(currentSenderDictionary.All(pair => pair.Value.Count == 1));
-        // Task.WaitAll(_tasks.ToArray());
-        // Assert.Equal(_tasks.Count, sizeServer);
-        Assert.Equal(_barrier.CurrentPhaseNumber, 1);
+        Assert.Equal(barrier.CurrentPhaseNumber, 1);
         _sendToThreadCommand.Verify(cmd => cmd.Execute(), Times.Exactly(sizeServer));
     }
 
     [Fact]
     public void StartingandStoppingServerAsConsoleApplication()
     {
+        // без барьеров
+        IoC.Resolve<Hwdtech.ICommand>(
+            "IoC.Register",
+            "Server.Thread.SoftStop.Action",
+            (object[] args) => () => { }
+        ).Execute();
+
+        IoC.Resolve<Hwdtech.ICommand>(
+            "IoC.Register",
+            "Server.Stop",
+            (object[] args) => new StopServerCommand()
+        ).Execute();
+
         var sizeServer = 11;
 
         var consoleInput = new StringReader("any");

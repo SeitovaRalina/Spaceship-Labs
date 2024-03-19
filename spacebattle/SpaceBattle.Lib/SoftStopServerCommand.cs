@@ -16,13 +16,8 @@ public class StopServerCommand : ICommand
                 //id потока
                 sender.Key,
                 // команда SoftStop, которую нужно добавить в очередь потока, чтобы она изменила его поведение
-                IoC.Resolve<ICommand>("Server.Thread.SoftStop", sender.Key, () =>
-                {
-                    // tasks.Add(Task.Run(() => { barrier.SignalAndWait(); }));
-                    IoC.Resolve<Action>("Server.Thread.SoftStop.Action");
-                })
+                IoC.Resolve<ICommand>("Server.Thread.SoftStop", sender.Key, IoC.Resolve<Action>("Server.Thread.SoftStop.Action"))
             ).Execute()
         );
-        // Task.WaitAll(tasks.ToArray());
     }
 }
