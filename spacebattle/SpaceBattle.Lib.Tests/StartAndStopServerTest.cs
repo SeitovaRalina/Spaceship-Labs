@@ -119,13 +119,13 @@ public class StartAndStopServerTest
 
         Assert.True(currentSenderDictionary.Count() == sizeServer);
         Assert.True(currentSenderDictionary.All(pair => pair.Value.Count == 0));
-        Assert.Equal(barrier.CurrentPhaseNumber, 0);
+        Assert.Equal(0, barrier.CurrentPhaseNumber);
         _startThreadCommand.Verify(cmd => cmd.Execute(), Times.Exactly(sizeServer));
 
         IoC.Resolve<ICommand>("Server.Stop").Execute();
 
         Assert.True(currentSenderDictionary.All(pair => pair.Value.Count == 1));
-        Assert.Equal(barrier.CurrentPhaseNumber, 1);
+        Assert.Equal(1, barrier.CurrentPhaseNumber);
         _sendToThreadCommand.Verify(cmd => cmd.Execute(), Times.Exactly(sizeServer));
     }
 
