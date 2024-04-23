@@ -1,14 +1,17 @@
-using CoreWCF;
+﻿using CoreWCF;
+using Hwdtech;
 
 namespace WebHttp
 {
     [ServiceBehavior(IncludeExceptionDetailInFaults = true)]
     internal class WebApi : IWebApi
     {
-        public string PathEcho(string param) => param;
+        public OrderContract HandleOrder(OrderContract request)
+        {
+            var dto = new OrderDTO(request); // приводим к IOrder из SpaceBattle.Lib !
+            IoC.Resolve<SpaceBattle.Lib.ICommand>("Server.WebHttp.HandleOrderStrategy", dto).Execute();
 
-        public string QueryEcho(string param) => param;
-
-        public ExampleContract BodyEcho(ExampleContract param) => param;
+            return request;
+        }
     }
 }

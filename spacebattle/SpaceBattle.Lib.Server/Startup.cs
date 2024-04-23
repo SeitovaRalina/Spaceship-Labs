@@ -1,7 +1,6 @@
-using CoreWCF;
+﻿using CoreWCF;
 using CoreWCF.Configuration;
 using Swashbuckle.AspNetCore.Swagger;
-using System.Xml;
 using WebHttp;
 
 internal sealed class Startup
@@ -10,15 +9,9 @@ internal sealed class Startup
     {
         services.AddServiceModelWebServices(o =>
         {
-            o.Title = "Test API";
-            o.Version = "1";
-            o.Description = "API Description";
-            o.TermsOfService = new("http://example.com/terms");
-            o.ContactName = "Contact";
-            o.ContactEmail = "support@example.com";
-            o.ContactUrl = new("http://example.com/contact");
-            o.ExternalDocumentUrl = new("http://example.com/doc.pdf");
-            o.ExternalDocumentDescription = "Documentation";
+            o.Title = "SpaceBattle Service API";
+            o.Version = "1.0.0";
+            o.Description = "Endpoint for processing incoming orders";
         });
 
         services.AddSingleton(new SwaggerOptions());
@@ -31,43 +24,16 @@ internal sealed class Startup
 
         app.UseServiceModel(builder =>
         {
-            var readerQuoates = new XmlDictionaryReaderQuotas
-            {
-                MaxBytesPerRead = 4096,
-                MaxDepth = 32,
-                MaxArrayLength = 16384,
-                MaxStringContentLength = 16384,
-                MaxNameTableCharCount = 16384
-            };
-
             builder.AddService<WebApi>();
             builder.AddServiceWebEndpoint<WebApi, IWebApi>(new WebHttpBinding
             {
                 MaxReceivedMessageSize = 5242880,
-                MaxBufferSize = 65536,
-                ReaderQuotas = readerQuoates
+                MaxBufferSize = 65536
             }, "api", behavior =>
             {
                 behavior.HelpEnabled = true;
                 behavior.AutomaticFormatSelectionEnabled = true;
             });
-
-            builder.AddServiceWebEndpoint<WebApi, IWebApi>(new WebHttpBinding
-            {
-                Security = new WebHttpSecurity
-                {
-                    Mode = WebHttpSecurityMode.Transport
-                },
-                MaxReceivedMessageSize = 5242880,
-                MaxBufferSize = 65536,
-                ReaderQuotas = readerQuoates
-            }, "api", behavior =>
-            {
-                behavior.HelpEnabled = true;
-                behavior.AutomaticFormatSelectionEnabled = true;
-            });
-
-            
         });
     }
 }
