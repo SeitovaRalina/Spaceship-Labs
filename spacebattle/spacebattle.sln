@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpaceBattle.Lib.Tests", "Sp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpaceBattle.Lib.Console", "SpaceBattle.Lib.Console\SpaceBattle.Lib.Console.csproj", "{54F446E0-06A4-48A3-A0A8-460F66BF0C01}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpaceBattle.Lib.Server", "SpaceBattle.Lib.Server\SpaceBattle.Lib.Server.csproj", "{3DE2465B-C9C5-49AE-B59D-D915D0AF7F5B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -34,5 +36,9 @@ Global
 		{54F446E0-06A4-48A3-A0A8-460F66BF0C01}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{54F446E0-06A4-48A3-A0A8-460F66BF0C01}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{54F446E0-06A4-48A3-A0A8-460F66BF0C01}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3DE2465B-C9C5-49AE-B59D-D915D0AF7F5B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3DE2465B-C9C5-49AE-B59D-D915D0AF7F5B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3DE2465B-C9C5-49AE-B59D-D915D0AF7F5B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3DE2465B-C9C5-49AE-B59D-D915D0AF7F5B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
