@@ -16,7 +16,7 @@ namespace WebHttp
 
         [DataMember(Name = "GameItemID", Order = 3)]
         [OpenApiProperty(Description = "Object identification.")]
-        public required string GameItemID { get; set; }
+        public required int GameItemID { get; set; }
 
         [DataMember(Name = "Properties", Order = 4)]
         [OpenApiProperty(Description = "Order parameters.")]

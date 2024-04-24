@@ -3,7 +3,7 @@
 public interface IOrder
 {
     public string GameID { get; }
-    public string GameItemID { get; }
+    public int GameItemID { get; }
     public string OrderType { get; }
     public IDictionary<string, object> OrderProperties { get; }
 }

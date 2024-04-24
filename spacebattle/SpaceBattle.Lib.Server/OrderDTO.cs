@@ -10,7 +10,7 @@ namespace WebHttp
             _order = order;
         }
         public string GameID => _order.GameID;
-        public string GameItemID => _order.GameItemID;
+        public int GameItemID => _order.GameItemID;
         public string OrderType => _order.Type;
         public IDictionary<string, object> OrderProperties => _order.Properties;
     }
