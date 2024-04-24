@@ -9,7 +9,7 @@ namespace WebHttp
         public OrderContract HandleOrder(OrderContract request)
         {
             var dto = new OrderDTO(request); // приводим к IOrder из SpaceBattle.Lib !
-            IoC.Resolve<SpaceBattle.Lib.ICommand>("Server.WebHttp.Component.HandleOrder", dto).Execute();
+            IoC.Resolve<SpaceBattle.Lib.ICommand>("Server.WebHttp.Command.HandleOrder", dto).Execute();
 
             return request;
         }

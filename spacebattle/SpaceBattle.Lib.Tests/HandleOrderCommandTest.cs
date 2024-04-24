@@ -32,8 +32,8 @@ public class HandleOrderStrategyTest
 
         IoC.Resolve<Hwdtech.ICommand>(
             "IoC.Register",
-            "Server.WebHttp.Component.HandleOrder",
-            (object[] args) => new HandleOrderStrategy().Init(args)
+            "Server.WebHttp.Command.HandleOrder",
+            (object[] args) => new HandleOrderCommand((IOrder)args[0])
         ).Execute();
     }
 
@@ -58,9 +58,11 @@ public class HandleOrderStrategyTest
             }
         ).Execute();
 
+        var handleOrderCommand = IoC.Resolve<ICommand>("Server.WebHttp.Command.HandleOrder", order.Object);
+
         sendToThreadCommand.Verify(cmd => cmd.Execute(), Times.Never);
 
-        IoC.Resolve<ICommand>("Server.WebHttp.Component.HandleOrder", order.Object).Execute();
+        handleOrderCommand.Execute();
 
         order.VerifyAll();
         Assert.Single(queueBaseOnFoundThreadID);
@@ -81,9 +83,11 @@ public class HandleOrderStrategyTest
             (object[] args) => sendToThreadCommand.Object
         ).Execute();
 
+        var handleOrderCommand = IoC.Resolve<ICommand>("Server.WebHttp.Command.HandleOrder", order.Object);
+
         sendToThreadCommand.Verify(cmd => cmd.Execute(), Times.Never);
 
-        Assert.Throws<Exception>(() => IoC.Resolve<ICommand>("Server.WebHttp.Component.HandleOrder", order.Object).Execute());
+        Assert.Throws<Exception>(() => handleOrderCommand.Execute());
 
         order.VerifyAll();
         sendToThreadCommand.Verify(cmd => cmd.Execute(), Times.Never);
