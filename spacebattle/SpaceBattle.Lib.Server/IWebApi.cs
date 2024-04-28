@@ -14,7 +14,7 @@ namespace WebHttp
         [OpenApiTag("Order message")]
         [OpenApiResponse(ContentTypes = new[] { "application/json" }, Description = "Success", StatusCode = HttpStatusCode.OK, Type = typeof(OrderContract))]
         [OpenApiResponse(Description = "Unsupported Format", StatusCode = HttpStatusCode.UnsupportedMediaType)]
-        OrderContract HandleOrder(
+        void HandleOrder(
             [OpenApiParameter(ContentTypes = new[] { "application/json" }, Description = "Send an order to a spaceship.")]
             OrderContract param);
     }
