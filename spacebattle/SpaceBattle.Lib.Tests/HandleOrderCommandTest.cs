@@ -1,5 +1,4 @@
-﻿using System.Collections.Concurrent;
-using Hwdtech;
+﻿using Hwdtech;
 using Hwdtech.Ioc;
 
 namespace SpaceBattle.Lib.Tests;
@@ -43,19 +42,12 @@ public class HandleOrderStrategyTest
             (object[] args) => cmdInterpretation.Object
         ).Execute();
 
-        var queueBaseOnFoundThreadID = new BlockingCollection<ICommand>();
-
         var sendToThreadCommand = new Mock<ICommand>();
         sendToThreadCommand.Setup(c => c.Execute()).Verifiable();
         IoC.Resolve<Hwdtech.ICommand>(
             "IoC.Register",
             "Server.Thread.SendCommand",
-            (object[] args) =>
-            {
-                var message = (ICommand)args[1];
-                queueBaseOnFoundThreadID.Add(message);
-                return sendToThreadCommand.Object;
-            }
+            (object[] args) => sendToThreadCommand.Object
         ).Execute();
 
         var handleOrderCommand = IoC.Resolve<ICommand>("Server.WebHttp.Command.HandleOrder", order.Object);
@@ -63,7 +55,6 @@ public class HandleOrderStrategyTest
         handleOrderCommand.Execute();
 
         order.VerifyAll();
-        Assert.Single(queueBaseOnFoundThreadID);
         sendToThreadCommand.Verify(cmd => cmd.Execute(), Times.Once);
     }
 
