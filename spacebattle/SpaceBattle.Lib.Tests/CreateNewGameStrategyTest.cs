@@ -80,27 +80,20 @@ public class CreateNewGameStrategyTest
             (object[] args) => gamesDict
         ).Execute();
 
-        var otherCommand = new Mock<ICommand>();
-        otherCommand.Setup(cmd => cmd.Execute()).Verifiable();
-        currentThreadQueue.Add(otherCommand.Object);
-
         var game = IoC.Resolve<ICommand>("Game.Create", gameID);
-
         Assert.Equal(game, gamesDict[gameID]);
-
-        gameLikeCommand.Verify(x => x.Execute(), Times.Never());
-        Assert.Single(currentThreadQueue);
+        Assert.Empty(currentThreadQueue);
 
         currentThreadQueue.Add(game);
-        Assert.True(currentThreadQueue.Count == 2);
+
+        Assert.Single(currentThreadQueue);
+        gameLikeCommand.Verify(x => x.Execute(), Times.Never());
 
         // Имитация работы ServerThread
         currentThreadQueue.Take().Execute();
         currentThreadQueue.Take().Execute();
-        currentThreadQueue.Take().Execute();
 
         Assert.Single(currentThreadQueue);
-        otherCommand.Verify(x => x.Execute(), Times.Once());
         gameLikeCommand.Verify(x => x.Execute(), Times.Exactly(2));
     }
 }
