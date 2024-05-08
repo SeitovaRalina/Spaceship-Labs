@@ -27,18 +27,6 @@ public class DeleteGameStrategyTest
             "Game.Command.CreateEmpty",
             (object[] args) => new Mock<ICommand>().Object
         ).Execute();
-
-        IoC.Resolve<Hwdtech.ICommand>(
-            "IoC.Register",
-            "Game.Command.Inject",
-            (object[] args) =>
-            {
-                var bridgeCommand = (IInjectableCommand)args[0];
-                var commandToInject = (ICommand)args[1];
-                bridgeCommand.Inject(commandToInject);
-                return bridgeCommand;
-            }
-        ).Execute();
     }
     [Fact]
     public void SuccessfulDeletingGame()
@@ -59,12 +47,28 @@ public class DeleteGameStrategyTest
             (object[] args) => gameScopesDict
         ).Execute();
 
+        var gameCommandInjectToEmpty = new Mock<ICommand>();
+        gameCommandInjectToEmpty.Setup(cmd => cmd.Execute()).Verifiable();
+        IoC.Resolve<Hwdtech.ICommand>(
+            "IoC.Register",
+            "Game.Command.Inject",
+            (object[] args) =>
+            {
+                var bridgeCommand = (IInjectableCommand)args[0];
+                var commandToInject = (ICommand)args[1];
+                bridgeCommand.Inject(commandToInject);
+                return gameCommandInjectToEmpty.Object;
+            }
+        ).Execute();
+
         Assert.Single(gamesDict);
         Assert.Single(gameScopesDict);
+        gameCommandInjectToEmpty.Verify(x => x.Execute(), Times.Never());
 
         IoC.Resolve<ICommand>("Game.Delete", gameID).Execute();
 
         Assert.Single(gamesDict);
         Assert.Empty(gameScopesDict);
+        gameCommandInjectToEmpty.Verify(x => x.Execute(), Times.Once());
     }
 }

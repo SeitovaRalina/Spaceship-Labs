@@ -12,9 +12,10 @@ public class DeleteGameStrategy : IStrategy
 
         return new ActionCommand(() =>
             {
-                IoC.Resolve<IInjectableCommand>("Game.Command.Inject",
+                IoC.Resolve<ICommand>("Game.Command.Inject",
                     gameBridgeCommand,
-                    IoC.Resolve<ICommand>("Game.Command.CreateEmpty"));
+                    IoC.Resolve<ICommand>("Game.Command.CreateEmpty")
+                ).Execute();
 
                 gameScopeDictionary.Remove(gameID);
             }
