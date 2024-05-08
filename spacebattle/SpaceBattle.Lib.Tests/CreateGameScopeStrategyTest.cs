@@ -35,6 +35,7 @@ public class CreateGameScopeCommandTest
 
         Assert.Throws<ArgumentException>(() => IoC.Resolve<object>("Game.Time.GetQuant"));
         Assert.Single(gameScopesDict);
+        Assert.Equal(gameScope, gameScopesDict[gameID]);
 
         IoC.Resolve<Hwdtech.ICommand>("Scopes.Current.Set", gameScope).Execute();
 
