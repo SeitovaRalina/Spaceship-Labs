@@ -18,14 +18,14 @@ public class GameUObjectStrategiesTest
 
         IoC.Resolve<Hwdtech.ICommand>(
             "IoC.Register",
-            "Game.UObject.Get",
-            (object[] args) => new GetGameUObjectStrategy().Init(args)
+            "Game.Scopes.New",
+            (object[] args) => new CreateGameScopeStrategy().Init(args)
         ).Execute();
 
         IoC.Resolve<Hwdtech.ICommand>(
             "IoC.Register",
-            "Game.UObject.Delete",
-            (object[] args) => new DeleteGameUObjectStrategy().Init(args)
+            "Game.Scopes.Dictionary",
+            (object[] args) => new Dictionary<string, object>()
         ).Execute();
     }
     [Fact]
@@ -42,6 +42,9 @@ public class GameUObjectStrategiesTest
             "Game.UObjects.GetByGameID",
             (object[] args) => getUObjectsDictByGameID.Object.Init((string)args[0])
         ).Execute();
+
+        var scope = IoC.Resolve<object>("Game.Scopes.New", gameID, IoC.Resolve<object>("Scopes.Current"), 3D);
+        IoC.Resolve<Hwdtech.ICommand>("Scopes.Current.Set", scope).Execute();
 
         var gameUObject = IoC.Resolve<IUObject>("Game.UObject.Get", gameID, uObjectID);
 

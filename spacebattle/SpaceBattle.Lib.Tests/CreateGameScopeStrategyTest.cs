@@ -11,7 +11,7 @@ public class CreateGameScopeCommandTest
         IoC.Resolve<Hwdtech.ICommand>(
             "IoC.Register",
             "Game.Scopes.New",
-            (object[] args) => new CreateGameScopeCommand((string)args[0], args[1], (double)args[2])
+            (object[] args) => new CreateGameScopeStrategy().Init(args)
         ).Execute();
     }
     [Fact]
@@ -28,13 +28,12 @@ public class CreateGameScopeCommandTest
             (object[] args) => gameScopesDict
         ).Execute();
 
-        IoC.Resolve<ICommand>("Game.Scopes.New", gameID, parentScope, quant).Execute();
+        var gameScope = IoC.Resolve<object>("Game.Scopes.New", gameID, parentScope, quant);
 
         IoC.Resolve<Hwdtech.ICommand>("Scopes.Current.Set", parentScope).Execute();
         Assert.Throws<ArgumentException>(() => IoC.Resolve<object>("Game.Time.GetQuant"));
 
         Assert.Single(gameScopesDict);
-        var gameScope = gameScopesDict[gameID];
 
         IoC.Resolve<Hwdtech.ICommand>("Scopes.Current.Set", gameScope).Execute();
         Assert.Equal(quant, IoC.Resolve<object>("Game.Time.GetQuant"));

@@ -18,14 +18,14 @@ public class GameQueueStrategiesTest
 
         IoC.Resolve<Hwdtech.ICommand>(
             "IoC.Register",
-            "Game.Queue.Enqueue",
-            (object[] args) => new EnqueueGameQueueStrategy().Init(args)
+            "Game.Scopes.New",
+            (object[] args) => new CreateGameScopeStrategy().Init(args)
         ).Execute();
 
         IoC.Resolve<Hwdtech.ICommand>(
             "IoC.Register",
-            "Game.Queue.Dequeue",
-            (object[] args) => new DequeueGameQueueStrategy().Init(args)
+            "Game.Scopes.Dictionary",
+            (object[] args) => new Dictionary<string, object>()
         ).Execute();
     }
     [Fact]
@@ -42,6 +42,9 @@ public class GameQueueStrategiesTest
             "Game.Queue.GetByGameID",
             (object[] args) => getGameQueueByGameID.Object.Init((string)args[0])
         ).Execute();
+
+        var scope = IoC.Resolve<object>("Game.Scopes.New", gameID, IoC.Resolve<object>("Scopes.Current"), 3D);
+        IoC.Resolve<Hwdtech.ICommand>("Scopes.Current.Set", scope).Execute();
 
         IoC.Resolve<ICommand>("Game.Queue.Enqueue", gameID, enqueuedCommand.Object).Execute();
 
