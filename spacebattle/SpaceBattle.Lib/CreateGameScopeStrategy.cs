@@ -2,23 +2,18 @@
 
 namespace SpaceBattle.Lib;
 
-public class CreateGameScopeCommand : ICommand
+public class CreateGameScopeStrategy : IStrategy
 {
-    private readonly string _gameID;
-    private readonly object _parentScope;
-    private readonly double _timeQuant;
-    public CreateGameScopeCommand(string gameID, object parentScope, double timeQuant)
+    public object Init(params object[] args)
     {
-        _gameID = gameID;
-        _parentScope = parentScope;
-        _timeQuant = timeQuant;
-    }
-    public void Execute()
-    {
-        var newGameScope = IoC.Resolve<object>("Scopes.New", _parentScope);
+        var gameID = (string)args[0];
+        var parentScope = args[1];
+        var timeQuant = (double)args[2];
+
+        var newGameScope = IoC.Resolve<object>("Scopes.New", parentScope);
 
         var scopesDictionary = IoC.Resolve<IDictionary<string, object>>("Game.Scopes.Dictionary");
-        scopesDictionary.Add(_gameID, newGameScope);
+        scopesDictionary.Add(gameID, newGameScope);
 
         IoC.Resolve<Hwdtech.ICommand>("Scopes.Current.Set", newGameScope).Execute();
 
@@ -26,7 +21,7 @@ public class CreateGameScopeCommand : ICommand
         IoC.Resolve<Hwdtech.ICommand>(
             "IoC.Register",
             "Game.Time.GetQuant",
-            (object[] args) => (object)_timeQuant
+            (object[] args) => (object)timeQuant
         ).Execute();
         // Scope Игры содержит стратегии для разрешения Команд, выполняемых над очередью Игры
         IoC.Resolve<Hwdtech.ICommand>(
@@ -51,6 +46,8 @@ public class CreateGameScopeCommand : ICommand
             (object[] args) => new DeleteGameUObjectStrategy().Init(args)
         ).Execute();
 
-        IoC.Resolve<Hwdtech.ICommand>("Scopes.Current.Set", _parentScope).Execute();
+        IoC.Resolve<Hwdtech.ICommand>("Scopes.Current.Set", parentScope).Execute();
+
+        return newGameScope;
     }
 }
