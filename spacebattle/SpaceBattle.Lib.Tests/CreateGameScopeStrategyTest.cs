@@ -8,6 +8,13 @@ public class CreateGameScopeCommandTest
     public CreateGameScopeCommandTest()
     {
         new InitScopeBasedIoCImplementationCommand().Execute();
+        IoC.Resolve<Hwdtech.ICommand>(
+            "Scopes.Current.Set",
+            IoC.Resolve<object>(
+                "Scopes.New",
+                IoC.Resolve<object>("Scopes.Root")
+            )
+        ).Execute();
 
         IoC.Resolve<Hwdtech.ICommand>(
             "IoC.Register",
@@ -19,7 +26,7 @@ public class CreateGameScopeCommandTest
     public void SuccessfulCreatingOfGameScopeAndTestingGetTimeQuantumStrategy()
     {
         var gameID = "0000000-0000-0000";
-        var parentScope = IoC.Resolve<object>("Scopes.New", IoC.Resolve<object>("Scopes.Root"));
+        var parentScope = IoC.Resolve<object>("Scopes.Current");
         var quant = 4e3D;
 
         var gameScopesDict = new Dictionary<string, object>();
