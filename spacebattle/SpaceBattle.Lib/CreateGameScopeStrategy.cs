@@ -17,13 +17,12 @@ public class CreateGameScopeStrategy : IStrategy
 
         IoC.Resolve<Hwdtech.ICommand>("Scopes.Current.Set", newGameScope).Execute();
 
-        // стратегия для разрешения значения Кванта времени, выделенного для игры.
         IoC.Resolve<Hwdtech.ICommand>(
             "IoC.Register",
             "Game.Time.GetQuant",
             (object[] args) => (object)timeQuant
         ).Execute();
-        // Scope Игры содержит стратегии для разрешения Команд, выполняемых над очередью Игры
+
         IoC.Resolve<Hwdtech.ICommand>(
             "IoC.Register",
             "Game.Queue.Enqueue",
@@ -34,12 +33,12 @@ public class CreateGameScopeStrategy : IStrategy
             "Game.Queue.Dequeue",
             (object[] args) => new DequeueGameQueueStrategy().Init(args)
         ).Execute();
-        // Scope Игры содержит стратегии для разрешения Команд, выполняемых над множеством игровых объектов
+
         IoC.Resolve<Hwdtech.ICommand>(
-            "IoC.Register",
-            "Game.UObject.Get",
-            (object[] args) => new GetGameUObjectStrategy().Init(args)
-        ).Execute();
+           "IoC.Register",
+           "Game.UObject.Get",
+           (object[] args) => new GetGameUObjectStrategy().Init(args)
+       ).Execute();
         IoC.Resolve<Hwdtech.ICommand>(
             "IoC.Register",
             "Game.UObject.Delete",

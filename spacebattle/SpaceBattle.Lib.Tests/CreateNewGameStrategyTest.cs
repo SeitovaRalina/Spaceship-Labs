@@ -89,7 +89,6 @@ public class CreateNewGameStrategyTest
         Assert.Single(currentThreadQueue);
         gameLikeCommand.Verify(x => x.Execute(), Times.Never());
 
-        // Имитация работы ServerThread
         currentThreadQueue.Take().Execute();
         currentThreadQueue.Take().Execute();
 
