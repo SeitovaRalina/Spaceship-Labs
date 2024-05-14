@@ -1,5 +1,4 @@
-﻿using System.Collections.Concurrent;
-using Hwdtech;
+﻿using Hwdtech;
 using Hwdtech.Ioc;
 
 namespace SpaceBattle.Lib.Tests;
@@ -66,13 +65,6 @@ public class CreateNewGameStrategyTest
             (object[] args) => gameLikeCommand.Object
         ).Execute();
 
-        var currentThreadQueue = new BlockingCollection<ICommand>();
-        IoC.Resolve<Hwdtech.ICommand>(
-            "IoC.Register",
-            "Server.Thread.RepeatCommand",
-            (object[] args) => new ActionCommand(() => { currentThreadQueue.Add((ICommand)args[0]); })
-        ).Execute();
-
         var gamesDict = new Dictionary<string, ICommand>();
         IoC.Resolve<Hwdtech.ICommand>(
             "IoC.Register",
@@ -82,17 +74,10 @@ public class CreateNewGameStrategyTest
 
         var game = IoC.Resolve<ICommand>("Game.Create", gameID);
         Assert.Equal(game, gamesDict[gameID]);
-        Assert.Empty(currentThreadQueue);
-
-        currentThreadQueue.Add(game);
-
-        Assert.Single(currentThreadQueue);
         gameLikeCommand.Verify(x => x.Execute(), Times.Never());
 
-        currentThreadQueue.Take().Execute();
-        currentThreadQueue.Take().Execute();
+        game.Execute();
 
-        Assert.Single(currentThreadQueue);
-        gameLikeCommand.Verify(x => x.Execute(), Times.Exactly(2));
+        gameLikeCommand.Verify(x => x.Execute(), Times.Once());
     }
 }
