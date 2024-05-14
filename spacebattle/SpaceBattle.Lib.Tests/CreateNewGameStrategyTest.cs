@@ -47,7 +47,6 @@ public class CreateNewGameStrategyTest
     [Fact]
     public void SuccessfulCreatingNewGame()
     {
-
         var gameID = "0000000-0000-0000";
 
         var gameScopesDict = new Dictionary<string, object>() { { gameID, "NewGameScope" } };
@@ -79,5 +78,65 @@ public class CreateNewGameStrategyTest
         game.Execute();
 
         gameLikeCommand.Verify(x => x.Execute(), Times.Once());
+    }
+    [Fact]
+    public void TryCreateGameLikeCommandThrowsException()
+    {
+        var gameID = "0000000-0000-0001";
+
+        var gameScopesDict = new Dictionary<string, object>() { { gameID, "NewGameScope" } };
+        IoC.Resolve<Hwdtech.ICommand>(
+            "IoC.Register",
+            "Game.Scopes.Dictionary",
+            (object[] args) => gameScopesDict
+        ).Execute();
+
+        var gameLikeCommand = new Mock<ICommand>();
+        gameLikeCommand.Setup(cmd => cmd.Execute()).Throws(() => new Exception()).Verifiable();
+        IoC.Resolve<Hwdtech.ICommand>(
+            "IoC.Register",
+            "Game.Command",
+            (object[] args) => gameLikeCommand.Object
+        ).Execute();
+
+        var gamesDict = new Dictionary<string, ICommand>();
+        IoC.Resolve<Hwdtech.ICommand>(
+            "IoC.Register",
+            "Game.Dictionary",
+            (object[] args) => gamesDict
+        ).Execute();
+
+        var game = IoC.Resolve<ICommand>("Game.Create", gameID);
+        gameLikeCommand.Verify(x => x.Execute(), Times.Never());
+
+        Assert.Throws<Exception>(game.Execute);
+    }
+    [Fact]
+    public void TryGetNewGameScopeByGameIDThrowsException()
+    {
+        var gameID = "0000000-0000-0000";
+
+        var gameScopesDict = new Dictionary<string, object>();
+        IoC.Resolve<Hwdtech.ICommand>(
+            "IoC.Register",
+            "Game.Scopes.Dictionary",
+            (object[] args) => gameScopesDict
+        ).Execute();
+
+        var gameLikeCommand = new Mock<ICommand>();
+        IoC.Resolve<Hwdtech.ICommand>(
+            "IoC.Register",
+            "Game.Command",
+            (object[] args) => gameLikeCommand.Object
+        ).Execute();
+
+        var gamesDict = new Dictionary<string, ICommand>();
+        IoC.Resolve<Hwdtech.ICommand>(
+            "IoC.Register",
+            "Game.Dictionary",
+            (object[] args) => gamesDict
+        ).Execute();
+
+        Assert.Throws<KeyNotFoundException>(() => IoC.Resolve<ICommand>("Game.Create", gameID));
     }
 }

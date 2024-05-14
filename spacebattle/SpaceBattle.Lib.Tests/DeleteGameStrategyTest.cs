@@ -71,4 +71,64 @@ public class DeleteGameStrategyTest
         Assert.Empty(gameScopesDict);
         gameCommandInjectToEmpty.Verify(x => x.Execute(), Times.Once());
     }
+    [Fact]
+    public void TryGetGameFromEmptyGamesDictThrowsException()
+    {
+        var gameID = "0000000-0000-0001";
+
+        var gamesDict = new Dictionary<string, IInjectableCommand>();
+        IoC.Resolve<Hwdtech.ICommand>(
+            "IoC.Register",
+            "Game.Dictionary",
+            (object[] args) => gamesDict
+        ).Execute();
+
+        var gameScopesDict = new Dictionary<string, object>();
+        IoC.Resolve<Hwdtech.ICommand>(
+            "IoC.Register",
+            "Game.Scopes.Dictionary",
+            (object[] args) => gameScopesDict
+        ).Execute();
+
+        IoC.Resolve<Hwdtech.ICommand>(
+            "IoC.Register",
+            "Game.Command.Inject",
+            (object[] args) => new Mock<ICommand>().Object
+        ).Execute();
+
+        Assert.Empty(gamesDict);
+
+        Assert.Throws<KeyNotFoundException>(() => IoC.Resolve<ICommand>("Game.Delete", gameID).Execute());
+    }
+    [Fact]
+    public void TryExecuteInjectCommandThrowsException()
+    {
+        var gameID = "0000000-0000-0002";
+
+        var gamesDict = new Dictionary<string, IInjectableCommand>() { { gameID, new Mock<IInjectableCommand>().Object } };
+        IoC.Resolve<Hwdtech.ICommand>(
+            "IoC.Register",
+            "Game.Dictionary",
+            (object[] args) => gamesDict
+        ).Execute();
+
+        var gameScopesDict = new Dictionary<string, object>();
+        IoC.Resolve<Hwdtech.ICommand>(
+            "IoC.Register",
+            "Game.Scopes.Dictionary",
+            (object[] args) => gameScopesDict
+        ).Execute();
+
+        var gameCommandInjectToEmpty = new Mock<ICommand>();
+        gameCommandInjectToEmpty.Setup(cmd => cmd.Execute()).Throws(() => new Exception()).Verifiable();
+        IoC.Resolve<Hwdtech.ICommand>(
+            "IoC.Register",
+            "Game.Command.Inject",
+            (object[] args) => gameCommandInjectToEmpty.Object
+        ).Execute();
+
+        Assert.Throws<Exception>(() => IoC.Resolve<ICommand>("Game.Delete", gameID).Execute());
+
+        gameCommandInjectToEmpty.Verify();
+    }
 }

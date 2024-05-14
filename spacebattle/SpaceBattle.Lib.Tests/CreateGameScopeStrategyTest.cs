@@ -48,4 +48,20 @@ public class CreateGameScopeCommandTest
 
         Assert.Equal(quant, IoC.Resolve<object>("Game.Time.GetQuant"));
     }
+    [Fact]
+    public void TryAddNewGameScopeToScopesDictThrowsException()
+    {
+        var gameID = "0000000-0000-0001";
+        var parentScope = IoC.Resolve<object>("Scopes.Current");
+        var quant = 4e3D;
+
+        var gameScopesDict = new Dictionary<string, object>() { { gameID, IoC.Resolve<object>("Scopes.Root") } };
+        IoC.Resolve<Hwdtech.ICommand>(
+            "IoC.Register",
+            "Game.Scopes.Dictionary",
+            (object[] args) => gameScopesDict
+        ).Execute();
+
+        Assert.Throws<ArgumentException>(() => IoC.Resolve<object>("Game.Scopes.New", gameID, parentScope, quant));
+    }
 }
