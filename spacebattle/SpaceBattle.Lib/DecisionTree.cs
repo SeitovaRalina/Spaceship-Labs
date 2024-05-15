@@ -1,6 +1,6 @@
-namespace SpaceBattle.Lib;
-using Dict = Dictionary<int, object>;
+﻿namespace SpaceBattle.Lib;
 using Hwdtech;
+using Dict = Dictionary<int, object>;
 
 public class DecisionTree : ICommand
 {
@@ -14,11 +14,13 @@ public class DecisionTree : ICommand
 
         var tree = IoC.Resolve<Dict>("Game.DecisionTree");
 
-        vectors.ForEach(vector => {
+        vectors.ForEach(vector =>
+        {
             var layer = tree;
-            vector.ForEach(num => {
-                layer.TryAdd(num, new Dict()); 
-                layer = (Dict) layer[num];
+            vector.ForEach(num =>
+            {
+                layer.TryAdd(num, new Dict());
+                layer = (Dict)layer[num];
             });
         });
     }
