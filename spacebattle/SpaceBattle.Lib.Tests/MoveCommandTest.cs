@@ -1,4 +1,6 @@
-﻿namespace SpaceBattle.Lib.Tests;
+﻿using Moq;
+
+namespace SpaceBattle.Lib.Tests;
 
 public class MoveCommandTest
 {
