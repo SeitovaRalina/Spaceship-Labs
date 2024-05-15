@@ -26,7 +26,7 @@ public class DecisionTreeTest
 
         path = @"../../../Vectors.txt";
     }
-    
+
     [Fact]
     public void BuildDecisionTreeWithoutExceptions()
     {
@@ -50,5 +50,13 @@ public class DecisionTreeTest
         Assert.True(
             ((Dict)((Dict)((Dict)tree[4])[6])[4]).ContainsKey(6)
         );
+    }
+
+    [Fact]
+    public void ImpossibleToReadFileWhenBuildDecisionTree()
+    {
+        var wrongPath = "wrongVectors";
+        var decisionTreeCommand = new DecisionTree(wrongPath);
+        Assert.Throws<FileNotFoundException>(decisionTreeCommand.Execute);
     }
 }
