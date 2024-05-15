@@ -26,4 +26,29 @@ public class DecisionTreeTest
 
         path = @"../../../Vectors.txt";
     }
+    
+    [Fact]
+    public void BuildDecisionTreeWithoutExceptions()
+    {
+        var decisionTreeCommand = new DecisionTree(path);
+        decisionTreeCommand.Execute();
+
+        var tree = IoC.Resolve<Dict>("Game.DecisionTree");
+
+        Assert.True(
+            tree.ContainsKey(4)
+        );
+
+        Assert.True(
+            ((Dict)tree[4]).ContainsKey(6)
+        );
+
+        Assert.True(
+            ((Dict)((Dict)tree[4])[6]).ContainsKey(4)
+        );
+
+        Assert.True(
+            ((Dict)((Dict)((Dict)tree[4])[6])[4]).ContainsKey(6)
+        );
+    }
 }
