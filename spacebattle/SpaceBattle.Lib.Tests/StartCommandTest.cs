@@ -32,7 +32,7 @@ public class StartCommandTests
 
         var startable = new Mock<IMoveCommandStartable>();
         startable.Setup(s => s.Target).Returns(uobject.Object);
-        startable.Setup(s => s.Properties).Returns(new Dictionary<string, object>() { { "Velocity", new int[] { 1, 1 } } });
+        startable.Setup(s => s.Properties).Returns(new Dictionary<string, object>() { { "Velocity", new Vector(1, 1) } });
 
         var startMoveCommand = new StartMoveCommand(startable.Object);
 
