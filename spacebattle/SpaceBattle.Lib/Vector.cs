@@ -1,8 +1,11 @@
-﻿namespace SpaceBattle.Lib;
+﻿using System.Diagnostics.CodeAnalysis;
 
+namespace SpaceBattle.Lib;
+
+[ExcludeFromCodeCoverage]
 public class Vector
 {
-    private readonly int[] coordinates;
+    private int[] coordinates;
     private int this[int i]
     {
         get => coordinates[i];
@@ -20,15 +23,20 @@ public class Vector
     {
         return coordinates.Length;
     }
-
     public static Vector operator +(Vector x, Vector y)
     {
-        var temp = new Vector(x.Length());
-        for (var i = 0; i < temp.Length(); i++)
+        var temp = new Vector(x.Length())
         {
-            temp[i] = x[i] + y[i];
-        }
-
+            coordinates = x.coordinates.Select((value, index) => value + y[index]).ToArray()
+        };
         return temp;
+    }
+    public override bool Equals(object? obj)
+    {
+        return obj != null && coordinates.SequenceEqual(((Vector)obj).coordinates);
+    }
+    public override int GetHashCode()
+    {
+        return coordinates.GetHashCode();
     }
 }
