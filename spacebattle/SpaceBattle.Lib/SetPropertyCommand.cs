@@ -17,7 +17,7 @@ public class SetPropertyCommand : ICommand
     }
     public void Execute()
     {
-        var objects = IoC.Resolve<Dictionary<int, IUObject>>("Game.UObjects.Get");
+        var objects = IoC.Resolve<Dictionary<int, IUObject>>("Game.UObjects.Dictionary");
 
         IoC.Resolve<ICommand>("Game.UObject.SetProperty", objects[_objectID], _propertyName, _iterator.Current).Execute();
         _iterator.MoveNext();
