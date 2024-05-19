@@ -2,6 +2,22 @@
 
 namespace SpaceBattle.Lib;
 
+public class SetUObjectPropertyStrategy : IStrategy
+{
+    public object Init(params object[] args)
+    {
+        var uObject = IoC.Resolve<Dictionary<int, IUObject>>("Game.UObjects.Dictionary")[(int)args[0]];
+        var propertyName = (string)args[1];
+        var iterator = (IEnumerator<object>)args[2];
+
+        return new ActionCommand(() =>
+            {
+                uObject.SetProperty(propertyName, iterator.Current);
+                iterator.MoveNext();
+            });
+    }
+}
+
 public class SetupObjectsPropertyCommand : ICommand
 {
     private readonly IEnumerable<int> _objectIDs;
@@ -17,7 +33,8 @@ public class SetupObjectsPropertyCommand : ICommand
         var iteratorByProperty = values.GetEnumerator();
 
         _objectIDs.ToList().ForEach(id =>
-            IoC.Resolve<ICommand>("Game.UObjects.Setup", id, _propertyName, iteratorByProperty).Execute());
+            IoC.Resolve<ICommand>("Game.UObject.SetProperty", id, _propertyName, iteratorByProperty).Execute()
+        );
         iteratorByProperty.Reset();
     }
 }
