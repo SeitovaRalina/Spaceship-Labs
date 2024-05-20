@@ -43,6 +43,6 @@ public class CreateEmptyGameUObjectsCommandTest
         IoC.Resolve<ICommand>("Game.UObjects.CreateEmpty", uObjectsCount).Execute();
 
         Assert.Equal(uObjectsCount, uObjectsDict.Count);
-        Assert.Equal(0, uObjectsDict.Keys.First());
+        Assert.True(uObjectsDict.Keys.SequenceEqual(Enumerable.Range(0, uObjectsCount)));
     }
 }
