@@ -19,7 +19,7 @@ public class FuelIterator : IEnumerator<object>
 
 public class SpaceshipFuels : IEnumerable<object>
 {
-    private readonly IList<int> fuelVolumes = IoC.Resolve<IList<int>>("Game.Fuels");
-    public IEnumerator<object> GetEnumerator() => new FuelIterator(fuelVolumes);
+    private readonly IList<int> _fuelVolumes = IoC.Resolve<IList<int>>("Game.Fuels");
+    public IEnumerator<object> GetEnumerator() => new FuelIterator(_fuelVolumes);
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 }
