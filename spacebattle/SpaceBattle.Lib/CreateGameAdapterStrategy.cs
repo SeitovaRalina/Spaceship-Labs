@@ -1,7 +1,7 @@
-using System.Reflection;
+﻿using System.Reflection;
 using Hwdtech;
 
-namespace SpaceGame.Lib;
+namespace SpaceBattle.Lib;
 
 public class CreateGameAdapterStrategy : IStrategy
 {

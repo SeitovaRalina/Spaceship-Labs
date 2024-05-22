@@ -3,17 +3,6 @@ using Hwdtech;
 
 namespace SpaceBattle.Lib;
 
-public class CompileGameAdapterStrategy : IStrategy
-{
-    public object Init(params object[] args)
-    {
-        var typeObject = (Type)args[0];
-        var typeTarget = (Type)args[1];
-
-        return new CompileGameAdapterCommand(typeObject, typeTarget);
-    }
-}
-
 public class CompileGameAdapterCommand : ICommand
 {
     private readonly Type _typeObject;

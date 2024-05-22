@@ -1,8 +1,7 @@
 ﻿using System.Reflection;
 using Hwdtech;
-using SpaceBattle.Lib;
 
-namespace SpaceGame.Lib;
+namespace SpaceBattle.Lib;
 
 public class FindGameAdapterStrategy : IStrategy
 {
@@ -15,8 +14,8 @@ public class FindGameAdapterStrategy : IStrategy
         var pairOfTypes = new KeyValuePair<Type, Type>(uObject.GetType(), typeTarget);
         var assembly = assemblyDictionary[pairOfTypes];
 
-        var type = assembly.GetType(IoC.Resolve<string>("Game.Adapter.AssemblyName", typeTarget));
-        
+        var type = assembly.GetType(IoC.Resolve<string>("Game.Adapter.Name", typeTarget));
+
         return Activator.CreateInstance(type!, uObject)!;
     }
 }
