@@ -31,6 +31,6 @@ public class CompileGameAdapterCommand : ICommand
         var assemblyDictionary = IoC.Resolve<IDictionary<KeyValuePair<Type, Type>, Assembly>>("Game.Adapter.Assemblies.Dictionary");
         var pairOfTypes = new KeyValuePair<Type, Type>(_typeObject, _typeTarget);
 
-        assemblyDictionary[pairOfTypes] = adapterAssembly;
+        assemblyDictionary.Add(pairOfTypes, adapterAssembly);
     }
 }

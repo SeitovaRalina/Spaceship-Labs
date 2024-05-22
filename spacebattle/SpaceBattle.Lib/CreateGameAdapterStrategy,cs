@@ -13,7 +13,7 @@ public class CreateGameAdapterStrategy : IStrategy
         var assemblyDictionary = IoC.Resolve<IDictionary<KeyValuePair<Type, Type>, Assembly>>("Game.Adapter.Assemblies.Dictionary");
         var pairOfTypes = new KeyValuePair<Type, Type>(uObject.GetType(), typeTarget);
 
-        if (!adapterAssemblyMap.TryGetValue(pair, out var assembly))
+        if (!assemblyDictionary.ContainsKey(pairOfTypes))
         {
             IoC.Resolve<ICommand>("Game.Adapter.Compile", uObject.GetType(), typeTarget).Execute();
         }
