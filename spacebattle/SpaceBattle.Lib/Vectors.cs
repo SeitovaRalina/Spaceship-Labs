@@ -1,23 +1,23 @@
 ﻿namespace SpaceBattle.Lib;
 
-public class Vector
+public class Vectors
 {
     private int[] coordinates;
     private readonly int coord_cont;
-    public Vector(params int[] coordinates)
+    public Vectors(params int[] coordinates)
     {
         this.coordinates = coordinates;
         coord_cont = coordinates.Length;
     }
-    public static Vector operator +(Vector a, Vector b)
+    public static Vectors operator +(Vectors a, Vectors b)
     {
-        Vector c = new(new int[a.coord_cont]);
+        Vectors c = new(new int[a.coord_cont]);
         c.coordinates = (a.coordinates.Select((x, index) => x + b.coordinates[index]).ToArray());
         return c;
     }
     public override bool Equals(object obj)
     {
-        return coordinates.SequenceEqual(((Vector)obj).coordinates);
+        return coordinates.SequenceEqual(((Vectors)obj).coordinates);
     }
     public override int GetHashCode()
     {

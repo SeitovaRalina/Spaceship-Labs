@@ -2,8 +2,8 @@
 
 public interface IMovable
 {
-    public Vector Position { get; set; }
-    public Vector Velocity { get; }
+    public Vectors Position { get; set; }
+    public Vectors Velocity { get; }
 }
 
 public class MoveCommand : ICommand
