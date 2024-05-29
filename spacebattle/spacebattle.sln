@@ -1,11 +1,14 @@
-﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpaceBattle.Lib", "SpaceBattle.Lib\SpaceBattle.Lib.csproj", "{382800F9-F93C-4C00-A55F-4CF0CA5610D0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpaceBattle.Lib", "SpaceBattle.Lib\SpaceBattle.Lib.csproj", "{9F167D80-EEC9-46C4-8401-DEAFADB696AF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpaceBattle.Lib.Tests", "SpaceBattle.Lib.Tests\SpaceBattle.Lib.Tests.csproj", "{9650E52F-FA10-468C-A9DD-8214E1505266}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpaceBattle.Lib.Tests", "SpaceBattle.Lib.Tests\SpaceBattle.Lib.Tests.csproj", "{DA3A7BD7-69F8-48BD-8518-5E963E7AAC2C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpaceBattle.Lib.Console", "SpaceBattle.Lib.Console\SpaceBattle.Lib.Console.csproj", "{54F446E0-06A4-48A3-A0A8-460F66BF0C01}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpaceBattle.Lib.Server", "SpaceBattle.Lib.Server\SpaceBattle.Lib.Server.csproj", "{3DE2465B-C9C5-49AE-B59D-D915D0AF7F5B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -16,13 +19,25 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{382800F9-F93C-4C00-A55F-4CF0CA5610D0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{382800F9-F93C-4C00-A55F-4CF0CA5610D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{382800F9-F93C-4C00-A55F-4CF0CA5610D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{382800F9-F93C-4C00-A55F-4CF0CA5610D0}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9650E52F-FA10-468C-A9DD-8214E1505266}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9650E52F-FA10-468C-A9DD-8214E1505266}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9650E52F-FA10-468C-A9DD-8214E1505266}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9650E52F-FA10-468C-A9DD-8214E1505266}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9F167D80-EEC9-46C4-8401-DEAFADB696AF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9F167D80-EEC9-46C4-8401-DEAFADB696AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9F167D80-EEC9-46C4-8401-DEAFADB696AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9F167D80-EEC9-46C4-8401-DEAFADB696AF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DA3A7BD7-69F8-48BD-8518-5E963E7AAC2C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DA3A7BD7-69F8-48BD-8518-5E963E7AAC2C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DA3A7BD7-69F8-48BD-8518-5E963E7AAC2C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DA3A7BD7-69F8-48BD-8518-5E963E7AAC2C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DB9CD53A-A436-4C5E-82C4-D7E796C1B2C9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DB9CD53A-A436-4C5E-82C4-D7E796C1B2C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DB9CD53A-A436-4C5E-82C4-D7E796C1B2C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DB9CD53A-A436-4C5E-82C4-D7E796C1B2C9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{54F446E0-06A4-48A3-A0A8-460F66BF0C01}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{54F446E0-06A4-48A3-A0A8-460F66BF0C01}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{54F446E0-06A4-48A3-A0A8-460F66BF0C01}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{54F446E0-06A4-48A3-A0A8-460F66BF0C01}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3DE2465B-C9C5-49AE-B59D-D915D0AF7F5B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3DE2465B-C9C5-49AE-B59D-D915D0AF7F5B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3DE2465B-C9C5-49AE-B59D-D915D0AF7F5B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3DE2465B-C9C5-49AE-B59D-D915D0AF7F5B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
