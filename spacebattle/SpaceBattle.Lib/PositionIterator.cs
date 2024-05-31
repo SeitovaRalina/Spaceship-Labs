@@ -18,7 +18,7 @@ public class PositionIterator : IEnumerator<object>
     public bool MoveNext() => ++_index < _positions.Count;
     public object Current => _positions[_index];
     public void Reset() => _index = _indexStart;
-    public void Dispose() => throw new NotImplementedException();
+    public void Dispose() => GC.SuppressFinalize(this);
 }
 
 public class SpaceshipPositions : IEnumerable<object>

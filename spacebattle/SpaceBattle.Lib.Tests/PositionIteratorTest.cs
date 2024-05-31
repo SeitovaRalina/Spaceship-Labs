@@ -45,8 +45,6 @@ public class PositionIteratorTest
 
         iterator.Reset();
         Assert.Equal(positionValues[1], iterator.Current);
-
-        Assert.Throws<NotImplementedException>(iterator.Dispose);
     }
     [Fact]
     public void PositionIteratingThrowsOutOfRangeException()

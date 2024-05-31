@@ -36,8 +36,6 @@ public class FuelIteratorTest
 
         iterator.Reset();
         Assert.Equal(fuelVolumes[0], iterator.Current);
-
-        Assert.Throws<NotImplementedException>(iterator.Dispose);
     }
     [Fact]
     public void PositionIteratingThrowsOutOfRangeException()

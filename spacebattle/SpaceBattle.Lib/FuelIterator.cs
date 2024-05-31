@@ -14,7 +14,7 @@ public class FuelIterator : IEnumerator<object>
     public bool MoveNext() => ++_index < _fuels.Count;
     public object Current => _fuels[_index];
     public void Reset() => _index = 0;
-    public void Dispose() => throw new NotImplementedException();
+    public void Dispose() => GC.SuppressFinalize(this);
 }
 
 public class SpaceshipFuels : IEnumerable<object>
