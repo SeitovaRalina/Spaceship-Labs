@@ -6,7 +6,7 @@ public class SetUObjectPropertyStrategy : IStrategy
 {
     public object Init(params object[] args)
     {
-        var uObject = IoC.Resolve<Dictionary<int, IUObject>>("Game.UObjects.Dictionary")[(int)args[0]];
+        var uObject = IoC.Resolve<IUObject>("Game.UObject.Get", (int)args[0]);
         var propertyName = (string)args[1];
         var iterator = (IEnumerator<object>)args[2];
 
@@ -30,8 +30,7 @@ public class SetupObjectsPropertyCommand : ICommand
     public void Execute()
     {
         var values = IoC.Resolve<IEnumerable<object>>("Game.Enumerable.GetByPropertyName", _propertyName);
-        var iteratorByProperty = values.GetEnumerator();
-
+        using var iteratorByProperty = values.GetEnumerator();
         _objectIDs.ToList().ForEach(id =>
             IoC.Resolve<ICommand>("Game.UObject.SetProperty", id, _propertyName, iteratorByProperty).Execute()
         );

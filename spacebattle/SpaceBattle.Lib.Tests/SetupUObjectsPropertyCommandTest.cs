@@ -62,8 +62,8 @@ public class SetupObjectsPropertyCommandTest
         };
         IoC.Resolve<Hwdtech.ICommand>(
             "IoC.Register",
-            "Game.UObjects.Dictionary",
-            (object[] args) => ships
+            "Game.UObject.Get",
+            (object[] args) => ships[(int)args[0]]
         ).Execute();
 
         IoC.Resolve<ICommand>("Game.UObjects.SetProperty", ships.Keys, "position").Execute();
@@ -104,8 +104,8 @@ public class SetupObjectsPropertyCommandTest
         };
         IoC.Resolve<Hwdtech.ICommand>(
             "IoC.Register",
-            "Game.UObjects.Dictionary",
-            (object[] args) => ships
+            "Game.UObject.Get",
+            (object[] args) => ships[(int)args[0]]
         ).Execute();
 
         IoC.Resolve<ICommand>("Game.UObjects.SetProperty", ships.Keys, "fuel").Execute();
