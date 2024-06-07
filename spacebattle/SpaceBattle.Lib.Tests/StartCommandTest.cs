@@ -28,9 +28,8 @@ public class StartCommandTests
     public void StartMoveCommandPropertiesAddMoveCommandQueue()
     {
         var uobject = new Mock<IUObject>();
-
         var startable = new Mock<IMoveCommandStartable>();
-        
+
         startable.Setup(s => s.Target).Returns(uobject.Object).Verifiable();
         startable.Setup(s => s.Properties).Returns(new Dictionary<string, object>() { { "Velocity", new Vector(1, 1) } }).Verifiable();
 
