@@ -55,7 +55,7 @@ public class MoveCommandTest
 
         movable.SetupSet(m => m.Position = new Vectors(7, 8)).Throws(() => new Exception()).Verifiable();
 
-        Assert.Throws<Exception>(moveCommand.Execute);
+        Assert.Throws<Exception>(() => moveCommand.Execute());
     }
 
     [Fact]
